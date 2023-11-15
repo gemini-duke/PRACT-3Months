@@ -5,22 +5,23 @@
 This project focuses on evaluating the effectiveness of a culturally adapted intervention, "Punguza Pombe Kwa Afya Yako/Reduce Alcohol for your Health", which is supplemented by mobile health-based text message boosters, in reducing harmful and hazardous alcohol use among adult acute injury patients in Moshi, Tanzania.
 
 ## Authors
-Catherine A. Staton (catherine.staton@duke.edu)
-Linda Minja (linda.minja@duke.edu)
-Joao Vitor Perez de Souza (joaovitor.souza@duke.edu)
-Pollyana Coelho Pessoa Santos (pollycpsantos1@gmail.com)
-Mia Buono (mia.buono@duke.edu)
-Francis Sakita (francis.sakita@kcmuco.ac.tz)
-Judith Boshe (jboshe@live.com)
-Ashley J. Phillips (ashley.phillips@duke.edu)
-Joao Ricardo Nickenig Vissoci (jnv4@duke.edu)
-Blandina T. Mmbaga (b.mmbaga@kcri.ac.tz)
+Catherine A. Staton (catherine.staton@duke.edu) 1, 2
+Linda Minja (linda.minja@duke.edu) 3, 4
+Joao Vitor Perez de Souza (joaovitor.souza@duke.edu) 1, 2 
+Pollyana Coelho Pessoa Santos (pollycpsantos1@gmail.com) 2
+Mia Buono (mia.buono@duke.edu) 2
+Francis Sakita (francis.sakita@kcmuco.ac.tz) 3, 5
+Judith Boshe (jboshe@live.com) 3
+Ashley J. Phillips (ashley.phillips@duke.edu) 1, 2
+Joao Ricardo Nickenig Vissoci (jnv4@duke.edu) 1, 2, 5
+Blandina T. Mmbaga (b.mmbaga@kcri.ac.tz) 2, 3, 4, 5
+
 Affiliations
-Duke Department of Emergency Medicine, Duke University School of Medicine
-Duke Global Health Institute, Duke University
-Kilimanjaro Christian Medical Centre, Moshi, Tanzania
-Kilimanjaro Clinical Research Institute, Moshi, Tanzania
-Kilimanjaro Christian Medical University College, Moshi, Tanzania
+1 Duke Department of Emergency Medicine, Duke University School of Medicine
+2 Duke Global Health Institute, Duke University
+3 Kilimanjaro Christian Medical Centre, Moshi, Tanzania
+4 Kilimanjaro Clinical Research Institute, Moshi, Tanzania
+5 Kilimanjaro Christian Medical University College, Moshi, Tanzania
 
 ## Abstract
 Background:
