@@ -8,6 +8,7 @@ This project focuses on evaluating the effectiveness of a culturally adapted int
 Catherine A. Staton (catherine.staton@duke.edu) 1, 2
 Linda Minja (linda.minja@duke.edu) 3, 4
 Joao Vitor Perez de Souza (joaovitor.souza@duke.edu) 1, 2 
+John A. Gallis (john.gallis@duke.edu) 2
 Pollyana Coelho Pessoa Santos (pollycpsantos1@gmail.com) 2
 Mia Buono (mia.buono@duke.edu) 2
 Francis Sakita (francis.sakita@kcmuco.ac.tz) 3, 5
