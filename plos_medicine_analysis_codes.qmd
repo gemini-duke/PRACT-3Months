@@ -1,0 +1,3703 @@
+---
+title: 'PRACT 3 Months - Plos Medicine Revisions July 2025'
+author: 
+  - name: Catherine A. Staton
+    email: catherine.staton@duke.edu
+    affiliations:
+      - name: Department of Emergency Medicine, Duke University School of Medicine
+
+  - name: Linda Minja
+    email: linda.minja@duke.edu
+    affiliations:
+      - name: Kilimanjaro Christian Medical Centre, Moshi, Tanzania
+
+  - name: Joao Vitor Perez de Souza
+    email: joaovitor.souza@duke.edu
+    affiliations:
+      - name: Department of Emergency Medicine, Duke University School of Medicine
+
+  - name: John A. Gallis
+    email: john.gallis@duke.edu
+    affiliations:
+      - name: Duke Global Health Institute, Duke University
+
+  - name: Pollyana Coelho Pessoa Santos
+    email: pollycpsantos1@gmail.com
+    affiliations:
+      - name: Department of Emergency Medicine, Duke University School of Medicine
+
+  - name: Mia Buono
+    email: mia.buono@duke.edu
+    affiliations:
+      - name: Duke Global Health Institute, Duke University
+
+  - name: Francis Sakita
+    email: francis.sakita@kcmuco.ac.tz
+    affiliations:
+      - name: Kilimanjaro Christian Medical Centre, Moshi, Tanzania
+
+  - name: Kennedy Ngowi
+    email: k.ngowi@kcri.ac.tz
+    affiliations:
+      - name: Kilimanjaro Christian Medical University College, Moshi, Tanzania
+
+  - name: Judith Boshe
+    email: jboshe@live.com
+    affiliations:
+      - name: Kilimanjaro Christian Medical Centre, Moshi, Tanzania
+
+  - name: Ashley J. Phillips
+    email: ashley.phillips@duke.edu
+    affiliations:
+      - name: Department of Emergency Medicine, Duke University School of Medicine
+
+  - name: Joao Ricardo Nickenig Vissoci
+    email: jnv4@duke.edu
+    affiliations:
+      - name: Department of Emergency Medicine, Duke University School of Medicine
+
+  - name: Blandina T. Mmbaga
+    email: b.mmbaga@kcri.ac.tz
+    affiliations:
+      - name: Kilimanjaro Clinical Research Institute, Moshi, Tanzania
+
+date: today
+format:
+  html:
+    code-fold: true
+    toc: true
+    toc-title: Contents
+    self-contained: true
+    margin: 
+      x: 0.7in
+      y: 0.7in
+    toc-depth: 4
+  typst:
+    toc: true
+    section-numbering: 1.1.1
+    columns: 1
+    fig-dpi: 300
+    fig-format: "svg"
+    df-print: paged
+    margin: 
+      x: 0.7in
+      y: 0.7in
+    fig-align: center
+embed-resources: true
+editor: source
+---
+# Load Libraries
+```{r}
+#| message: FALSE
+#| warning: FALSE
+suppressPackageStartupMessages({
+  library(gtsummary)# Used for creating summary tables in HTML or LaTeX formats, useful for reporting.
+  library(tidyverse)  # A collection of packages designed for data science (includes dplyr, ggplot2, tidyr, readr, purrr, and tibble).
+  library(this.path)
+  library(gt)  # Utilized for creating rich, customizable tables for reporting and publication.
+  library(redcapAPI)  # Facilitates data extraction from REDCap databases via API.
+  library(lubridate)  # Provides functions to work with date-times and timespans, simplifying date-time data manipulation.
+  library(Hmisc)  # Offers many functions for data analysis, high-level graphics, utility operations, and biostatistics.
+  library(arsenal)  # Useful for data cleaning, exploration, and reporting.
+  # library(nlme) # Used for linear and nonlinear mixed effects models (commented out, possibly for future use).
+  library(rms)  # Provides tools for regression modeling strategies.
+  library(glmmTMB)  # Used for fitting generalized linear mixed models, including mixed Poisson and zero-inflated models.
+  library(lme4)  # Provides functions to fit linear and generalized linear mixed-effects models.
+  library(stringr)  # Facilitates string manipulation and operations with a consistent and simple interface.
+  library(qwraps2)  # Useful for quick summary statistics, tables, and plots in a 'tidy' format.
+  library(broom)  # Helps convert statistical analysis objects into tidy data frames, making them easier to work with in the tidyverse.
+  library(broom.mixed)
+  library(ggh4x)  # Extends ggplot2 for enhanced plotting capabilities.
+  library(ggsignif)  # Offers options to add significance markers to 'ggplot2' plots.
+  library(boot)  # Provides extensive facilities for bootstrapping and related resampling methods.
+  library(patchwork) # Allows for the creation of complex multi-plot layouts.
+  library(glue)
+  library(gridGraphics)
+  library(grid)
+  library(mice)
+})
+
+proj <- this.proj()
+
+# Vectors with subsets of variables to be used afterwards
+drinc <- c("drinc1", "drinc2", "drinc3", "drinc4", "drinc6", "drinc7", "drinc8", 
+           "drinc9", "drinc10", "drinc11", "drinc12", "drinc13", "drinc14", "drinc16",
+           "drinc17", "drinc18", "drinc19", "drinc20","drinc21", "drinc22", "drinc23", "drinc24",
+           "drinc26", "drinc27", "drinc28", "drinc29", "drinc30","drinc31", "drinc32",
+           "drinc33", "drinc34", "drinc36", "drinc37", "drinc38", "drinc39",
+           "drinc40","drinc41", "drinc42", "drinc43", "drinc44", "drinc46", "drinc47",
+           "drinc48", "drinc49", "drinc50")
+
+drink_days <- c("drink_q_1d", "drink_q_2d","drink_q_3d","drink_q_4d","drink_q_5d",
+                "drink_q_6d","drink_q_7d","drink_q_8d","drink_q_9d","drink_q_10d",
+                "drink_q_11d","drink_q_12d","drink_q_13d","drink_q_14d","drink_q_15d",
+                "drink_q_16d","drink_q_17d","drink_q_18d","drink_q_19d","drink_q_20d",
+                "drink_q_21d","drink_q_22d","drink_q_23d","drink_q_24d","drink_q_25d",
+                "drink_q_26d","drink_q_27d","drink_q_28d")
+
+mental_health <- c("phq1", "phq2", "phq3", "phq4", "phq5", "phq6", "phq7", "phq8", "phq9")
+
+```
+
+# Descriptive Tables
+
+## Table 1: Baseline Characteristics
+```{r}
+#| label: tbl-1
+#| tbl-cap: "Baseline characteristics of participants in the PRACT study"
+labels_1 <- list(female ~ "Gender",
+                 age ~ "Age",
+                 edu_years ~ "Years of education",
+                 employ ~ "Employment",
+                 income_house ~ "Monthly total household income (Tz Shilling)",
+                 income_self ~ "Monthly personal income (Tz Shilling)",
+                 tribe_recoded ~ "Tribe")
+
+# Create a summary table for participants in the intervention arm (base period)
+tbl_1arm <- data_subset %>%
+  filter(period=="base") %>% # Filter the data for the base period
+  select(age, female, tribe_recoded, edu_years, employ, income_house, income_self, treat) %>% # Select specific columns
+  tbl_summary(by=treat, # Group by 'arm' variable
+              label= labels_1, # Use custom labels for the variables
+              type=all_continuous() ~ "continuous2", # Set the type for continuous variables
+              statistic = list(all_continuous() ~ c("{mean} ({sd})", # Display mean and standard deviation for continuous variables
+                                                    "{median} ({p25}, {p75})"), # Display median, 25th and 75th percentiles for continuous variables
+                               all_categorical() ~ "{n} / {N} ({p}%)"), # Display counts and percentages for categorical variables
+              missing_text = "Missing", # Set the text to display for missing data
+              sort = all_categorical() ~ "frequency", # Sort categorical variables by frequency
+              digits = list(all_continuous() ~ 1)
+  ) %>% 
+  bold_labels() %>%  # Make the labels bold
+  add_p() %>% 
+  bold_p() 
+
+# Create a summary table for all participants (base period)
+tbl_1 <- data_subset %>%
+  filter(period=="base") %>%
+  select(age, female, tribe_recoded, edu_years, employ, income_house, income_self) %>%
+  tbl_summary(label = labels_1,
+              type=all_continuous() ~ "continuous2",
+              statistic = list(all_continuous() ~ c("{mean} ({sd})",
+                                                    "{median} ({p25}, {p75})"),
+                               all_categorical() ~ "{n} / {N} ({p}%)"),
+              missing_text = "Missing",
+              sort = all_categorical() ~ "frequency",
+              digits = list(all_continuous() ~ 1)
+  ) %>%
+  bold_labels()
+
+# Merge the two summary tables
+tbl_1 <- tbl_merge(tbls=list(tbl_1, tbl_1arm),
+                   tab_spanner=c("Overall", "By Arm"))
+
+# Save the merged summary table as a Microsoft Word document
+# tbl_1 %>%
+#   as_flex_table() %>% # Convert the gtsummary table to a flextable
+#   flextable::save_as_docx(., path="./tables/table1_demographics.docx") # Save the table as a .docx file
+
+tbl_1
+```
+
+## Table -  Enrollment Criteria and Outcomes
+```{r}
+#| label: tbl-enrollment
+#| tbl-cap: "Enrollment criteria for participants in the PRACT study"
+
+label_enroll <- list(drinkb4inj ~ "Self-reported alcohol use prior injury",
+                     bacpositive ~ "BAC positive",
+                     auditover8 ~ "AUDIT > 8")
+
+# Create a summary table for participants in the intervention arm (base period)
+tbl_enroll_arm <- data_subset %>%
+  filter(period == "base") %>% 
+  select(bacpositive, auditover8, drinkb4inj, treat) %>%
+  tbl_summary(by = treat, 
+              label = label_enroll,
+              type=all_continuous() ~ "continuous2",
+              statistic = list(all_continuous() ~ c("{mean} ({sd})",
+                                                    "{median} ({p25}, {p75})"),
+                               all_categorical() ~ "{n} / {N} ({p}%)"),
+              missing_text = "Missing",
+              sort = all_categorical() ~ "frequency",
+              digits = list(all_continuous() ~ 1)
+  ) %>% 
+  bold_labels()
+
+# Create a summary table for all participants (base period)
+tbl_enroll <- data_subset %>%
+  filter(period == "base") %>% 
+  select(bacpositive, auditover8, drinkb4inj) %>%
+  tbl_summary(label = label_enroll,
+              type=all_continuous() ~ "continuous2",
+              statistic = list(all_continuous() ~ c("{mean} ({sd})",
+                                                    "{median} ({p25}, {p75})"),
+                               all_categorical() ~ "{n} / {N} ({p}%)"),
+              missing_text = "Missing",
+              sort = all_categorical() ~ "frequency",
+              digits = list(all_continuous() ~ 1,
+                            all_categorical() ~ 1)
+  ) %>% 
+  bold_labels()
+
+# Merge the two summary tables
+tbl_enroll <- tbl_merge(tbls=list(tbl_enroll, tbl_enroll_arm),
+                        tab_spanner = c("Overall", "By Arm"))
+tbl_enroll
+
+# Save the merged summary table as a Microsoft Word document
+# tbl_enroll %>% 
+#   as_flex_table() %>% 
+#   flextable::save_as_docx(., path="./tables/table_enrollment_criteria.docx")
+
+```
+
+## Table: Outcomes at Baseline and 3 Months
+```{r}
+#| label: tbl-outcomes
+#| tbl-cap: "Outcomes for participants in the PRACT study at baseline and 3 months"
+
+label2 <- list(drinking.days ~ "Drinking days",
+               drinking.amount ~ "Number of drinks",
+               binge.days ~ "Binge drinking days", phq_sum ~ "PHQ-9 score", 
+               audit_sum ~ "AUDIT score", drinc_sum ~ "DrInC")
+
+# Create summary tables for drinking outcomes, psychological outcomes, 
+# and other variables at baseline and 3 months, for both the intervention arm and all participants
+
+# Baseline - Intervention Arm
+tbl_2_arm <- data_subset %>%
+  filter(period == "base") %>% 
+  select(binge.days, drinking.days, drinking.amount,
+         phq_sum, audit_sum, drinc_sum, treat) %>% 
+  tbl_summary(by=treat,
+              type=all_continuous() ~ "continuous2",
+              statistic = list(all_continuous() ~ c("{mean} ({sd})",
+                                                    "{median} ({p25}, {p75})"),
+                               all_categorical() ~ "{n} / {N} ({p}%)"),
+              missing_text = "Missing",
+              label=label2,
+              digits = list(all_continuous() ~ 1)
+  ) %>%
+  bold_labels()
+
+# Baseline - All Participants
+tbl_2 <- data_subset %>%
+  filter(period == "base") %>% 
+  select(binge.days, drinking.days, drinking.amount,
+         phq_sum, audit_sum, drinc_sum) %>% 
+  tbl_summary(type=all_continuous() ~ "continuous2",
+              statistic = list(all_continuous() ~ c("{mean} ({sd})",
+                                                    "{median} ({p25}, {p75})"),
+                               all_categorical() ~ "{n} / {N} ({p}%)"),
+              missing_text = "Missing",
+              label=label2,
+              digits = list(all_continuous() ~ 1)
+  ) %>%
+  bold_labels()
+
+# 3 Months - Intervention Arm
+tbl_2_3mo_arm <- data_subset %>%
+  filter(period == "3mo") %>% 
+  select(binge.days, drinking.days, drinking.amount,
+         phq_sum, audit_sum, drinc_sum, treat) %>% 
+  tbl_summary(by=treat,
+              type=all_continuous() ~ "continuous2",
+              statistic = list(all_continuous() ~ c("{mean} ({sd})",
+                                                    "{median} ({p25}, {p75})"),
+                               all_categorical() ~ "{n} / {N} ({p}%)"),
+              missing_text = "Missing",
+              label=label2,
+              digits = list(all_continuous() ~ 1),
+  ) %>%
+  bold_labels()
+
+# 3 Months - All Participants
+tbl_2_3mo <- data_subset %>%
+  filter(period == "3mo") %>% 
+  select(binge.days, drinking.days, drinking.amount,
+         phq_sum, audit_sum, drinc_sum) %>% 
+  tbl_summary(type=all_continuous() ~ "continuous2",
+              statistic = list(all_continuous() ~ c("{mean} ({sd})",
+                                                    "{median} ({p25}, {p75})"),
+                               all_categorical() ~ "{n} / {N} ({p}%)"),
+              missing_text = "Missing",
+              label=label2,
+              digits = list(all_continuous() ~ 1)
+  ) %>%
+  bold_labels()
+
+
+tbl_2_3mo <- tbl_merge(tbls=list(tbl_2_3mo, tbl_2_3mo_arm))
+tbl_2 <- tbl_merge(tbls=list(tbl_2, tbl_2_arm), tab_spanner = c("", ""))
+tbl_2 <- tbl_merge(tbls=list(tbl_2, tbl_2_3mo), tab_spanner = c("Baseline", "3 Months"))
+
+tbl_2
+
+# tbl_2 %>% as_flex_table() %>% flextable::save_as_docx(., path="./tables/table2_outcomes.docx")
+
+```
+
+# Main Results
+
+## Statistical Analysis
+
+For the analysis of the primary and secondary outcomes, we applied a flexible modeling approach to account for the longitudinal structure of the data and the differences between baseline and 3-month follow-up across control and intervention groups. The approach incorporated a Difference-in-Differences (DiD) framework, enabling the estimation of treatment effects while accounting for baseline differences and time trends in both groups. Models were fit using an appropriate distribution to handle the characteristics of each outcome, with predictors including treatment assignment, time period, and their interaction.
+
+To estimate the average changes over time, we used model-based predictions to calculate group-specific means for the outcomes at baseline and 3 months. These predictions were then used to derive differences within each group and the treatment effect as the difference between these changes. Confidence intervals for these estimates were obtained using bootstrapping techniques, providing robust measures of variability and ensuring reliability.
+
+This constrained longitudinal approach enabled the evaluation of the intervention effect while maintaining consistency across time points and capturing the dynamic nature of the outcomes. The combination of predictive modeling and resampling ensured a rigorous and transparent assessment of the trial’s objectives.
+
+## Multiple Imputation by Chained Equations (MICE)
+
+Multiple imputation is performed using the `mice` package. I used the Predictive Mean Matching (PMM) method to impute the missing values. PMM is a semi-parametric approach that preserves the distribution of observed data by selecting real, observed values rather than generating entirely synthetic ones. In PMM, **missing values are replaced with observed values from the most similar cases**, identified based on predictive models. This ensures that imputed values remain realistic and within the observed range. The imputation is performed with `m = 100`, meaning that **100 separate imputed datasets are generated** to account for uncertainty in the missing data. Each dataset represents a plausible version of the original data with missing values filled in differently. The process **iterates up to `maxit = 50` times with 100 burn-in iterations**. A seed is set for reproducibility.
+
+> The imputation process is done separately for each outcome
+
+```{r}
+data_sens_base <- data_sens %>% 
+  select(matches("drink_q_") & !matches("3mo|6mo|9mo|12mo|24mo"),
+         age, tribe_recoded, employ,
+         marital, live, insurance, female,
+         income_self, income_house,
+         education, binge.days = binge.days_base,
+         practid, treat = arm_stage1) %>% 
+  mutate(female = as.character(female),
+         period = "base")
+
+data_sens_3mo <- data_sens %>% 
+  select(matches("drink_q_") & matches("3mo"),
+         age, tribe_recoded, employ,
+         marital, live, insurance, female,
+         income_self, income_house,
+         education, 
+         binge.days = binge.days_3mo,
+         practid, treat = arm_stage1) %>% 
+  # remove _3mo
+  rename_with(~ str_remove(., "_3mo$")) %>% 
+  mutate(female = as.character(female),
+         period = "3mo")
+
+data_sens_imp <- data_sens_base %>% 
+  bind_rows(data_sens_3mo) 
+predMatrix <- make.predictorMatrix(data_sens_imp)
+
+predMatrix[, c("practid", "treat", "period")] <- 0  # Prevent vars from being used as a predictor
+predMatrix[c("practid", "treat", "period"), ] <- -2  # Prevent vars from being imputed
+
+
+# imp_all <- mice(data_sens_imp, m=100, maxit=50, seed=54123,
+#                 method="pmm", predictorMatrix = predMatrix,
+#                 n.burn=100)
+# saveRDS(imp_all, file = file.path(proj, "3months", "PLOS_Medicine_July2025",
+#                                   "data", "data_sens_binge_imputed.RDS"))
+# Loading the imputed dataset
+imp_all <- readRDS(file.path(proj, "3months", "PLOS_Medicine_July2025",
+                             "data", "data_sens_binge_imputed.RDS"))
+
+```
+
+The variables below were used to input missing data, with the exception of:
+
+-   `treat`
+
+-   `period`
+
+-   `practid`
+
+```{r}
+colnames(data_sens_imp)
+```
+
+
+#### Binge Drinking Days - ZINBM
+
+For the analysis of binge drinking days, we implemented a zero-inflated negative binomial model (ZINBM) to account for the excess zeros and overdispersion in the data. The model included interaction terms between treatment and time period (baseline and 3 months) to estimate changes within each group and the treatment effect as the Difference-in-Differences (DiD) between the intervention and usual care groups. Predictions from the fitted model were used to calculate average changes over time, capturing the longitudinal dynamics of binge drinking days.
+
+Bootstrapping techniques were employed to estimate confidence intervals for within-group differences and the DiD effect, providing robust measures of variability. This approach ensured a comprehensive evaluation of the intervention's impact on binge drinking days while accounting for the longitudinal structure and distributional characteristics of the data.
+
+Here I fit a model to the 100 different versions of the imputed dataset. The outcome variable used here represents the imputed number of binge drinking days. We see the model output from the 5 different datasets and the formatted table with the pooled stats.
+
+```{r}
+#| tbl-cap: "ZINBM Model results after imputation - using calc imp binge days"
+#| label: tbl-imp-binge2
+
+imp_all <- imp_all |> 
+  complete(action="long", include=T) |> 
+  mutate(period = factor(period, levels = c("base", "3mo")),
+         treat = factor(treat, levels = c("Usual care", "Intervention"))) |> 
+  as.mids()
+
+data_binge_drinking <- complete(imp_all, 1)
+X <- model.matrix(~period * treat, data = data_binge_drinking)
+Xalt <- X[, c("period3mo", "period3mo:treatIntervention")]
+
+models <- with(imp_all, 
+               glmmTMB(binge.days ~  Xalt + (1|practid), 
+                       zi = ~ treat, 
+                       family = nbinom2))
+models %>% 
+  tbl_regression(exponentiate = T) |> 
+  as_gt() |> 
+  gtsave(filename = "binge_days_imp_model_results.docx", 
+         path = file.path(proj, "3months", "PLOS_Medicine_July2025", "tables"),
+         inline_css = T, 
+         table.attr = "style='width: 100%;")
+```
+
+In order to generate the p values and figures, I will use one of the imputed versions for the models.
+
+```{r}
+data_binge <- complete(imp_all, 1)
+
+X <- model.matrix(~period * treat, data = data_binge)
+Xalt <- X[, c("period3mo", "period3mo:treatIntervention")]
+
+zinbm_binge.days <- glmmTMB(binge.days ~  Xalt + (1|practid), 
+                            zi = ~ treat, 
+                            family = nbinom2, 
+                            data = data_binge)
+
+predicted_means_table <- data_binge |> 
+  select(period, treat) |> 
+  bind_cols(pred = zinbm_binge.days |> 
+              predict(newdata = data_binge, type = "response")) |> 
+  group_by(period, treat) |>
+  summarize(mean = mean(pred),
+            .groups="drop") |> 
+  mutate(across(where(is.numeric), ~ round(.x, 1))) |> 
+  mutate(variable = "Binge Drinking Days")
+
+
+stats_binge.days_imp <- summary(zinbm_binge.days)
+stats_binge.days_imp <- as.data.frame(stats_binge.days_imp$coefficients$cond)
+stats_binge.days_imp <- tibble::rownames_to_column(stats_binge.days_imp, "contrast") %>% 
+  select(-`z value`) %>% 
+  mutate(var = "binge.days")
+
+# Calculate confidence intervals
+ci_binge.days <- tibble::rownames_to_column(as.data.frame(confint(zinbm_binge.days)), "contrast") %>% 
+  mutate_if(is.numeric, exp) %>% 
+  mutate(contrast = dplyr::recode(contrast, "cond.Xaltperiod3mo" = "Xaltperiod3mo",
+                                  "cond.Xaltperiod3mo:treatIntervention" = "Xaltperiod3mo:treatIntervention"))
+# Merge the statistics with confidence intervals
+stats_binge.days_imp <- stats_binge.days_imp %>% 
+  left_join(ci_binge.days %>% select(-Estimate), by=join_by(contrast==contrast))
+
+stats_binge.days_imp |> 
+  mutate(across(where(is.numeric), ~ round(.x, 2))) %>% 
+  gt()
+```
+
+##### Mean Predicted Change
+
+```{r}
+# Commented code to avoid re-running the bootstrap process
+# Initialize lists
+# boot_results_intervention <- list()
+# boot_results_usual <- list()
+# boot_results_did <- list()
+# 
+# # Loop over each of the 10 imputed datasets
+# for (i in 1:100) {
+#   # Get the i-th complete dataset
+#   data_i <- complete(imp_all, i) %>%
+#     select(binge.days, treat, period, practid)
+#   
+#   # Ensure proper factor levels
+#   data_i$period <- factor(data_i$period, levels = c("base", "3mo"))
+#   data_i$treat <- factor(data_i$treat, levels = c("Usual care", "Intervention"))
+#   
+#   # Model matrix
+#   Xalt <- model.matrix(~ period * treat, data = data_i)
+#   Xalt <- Xalt[, c("period3mo", "period3mo:treatIntervention")]
+#   
+#   # Fit model
+#   model_i <- glmmTMB(binge.days ~ Xalt + (1 | practid),
+#                      zi = ~ treat,
+#                      family = nbinom2,
+#                      data = data_i
+#   )
+#   
+#   # Predict expected values
+#   data_i$pred <- predict(model_i, newdata = data_i, type = "response")
+#   
+#   # Group-specific bootstraps
+#   boot_data_intervention <- data_i %>% filter(treat == "Intervention")
+#   boot_data_usual <- data_i %>% filter(treat == "Usual care")
+#   
+#   boot_interv <- boot(data = boot_data_intervention,
+#                       statistic = mean_diff_time_func,
+#                       R = 1000)
+#   boot_usual <- boot(data = boot_data_usual,
+#                      statistic = mean_diff_time_func,
+#                      R = 1000)
+#   
+#   # DID bootstrap on full predicted dataset
+#   boot_did <- boot(data = data_i, statistic = bootstrap_did, R = 1000)
+#   
+#   # Store bootstrap replicates
+#   boot_results_intervention[[i]] <- boot_interv$t
+#   boot_results_usual[[i]] <- boot_usual$t
+#   boot_results_did[[i]] <- boot_did$t
+# }
+# 
+# # Combine all bootstrap samples across imputations
+# all_interv <- unlist(boot_results_intervention)
+# all_usual <- unlist(boot_results_usual)
+# all_did <- unlist(boot_results_did)
+# 
+# # Final summary table
+# final_results <- tibble(
+#   group = c("Intervention", "Usual Care", "DiD"),
+#   diff = c(mean(all_interv), mean(all_usual), mean(all_did)),
+#   ci_low = c(quantile(all_interv, 0.025),
+#              quantile(all_usual, 0.025),
+#              quantile(all_did, 0.025)),
+#   ci_high = c(quantile(all_interv, 0.975),
+#               quantile(all_usual, 0.975),
+#               quantile(all_did, 0.975)),
+#   variable = "Binge Drinking Days"
+# )
+
+```
+
+```{r}
+#| label: tbl-binge-mice-boot
+#| tbl-cap: "Within and across group differences and DiD in the predicted mean Binge Drinking Days in the inputed model"
+final_results %>% 
+  filter(variable == "Binge Drinking Days") %>% 
+  mutate(across(where(is.numeric), ~ round(.x, 2))) %>% 
+  gt()
+```
+
+#### Drinking Days - NBM
+
+In this section, I will perform the same imputation and modeling process for the number of drinking days. The imputation will be done using the same variables as before, but now focusing on the `drinking.days` variable instead of `binge.days`. 
+
+Modeling for the number of drinking days will be done using a negative binomial model (NBM) to account for the count nature of the data. The model will include treatment and time period interactions to estimate changes within each group and the treatment effect as the Difference-in-Differences (DiD) between the intervention and usual care groups. Predictions from the fitted model will be used to calculate average changes over time, capturing the longitudinal dynamics of drinking days.
+
+```{r}
+# Imputation
+# The imputation process here is similar to before. I used the variables for the last 28 days but also kept the demographics and clinic
+data_sens_base <- data_sens %>% 
+  select(matches("drink_q_") & !matches("3mo|6mo|9mo|12mo|24mo"),
+         age, tribe_recoded, employ,
+         marital, live, insurance, female,
+         income_self, income_house,
+         education, drinking.days = drinking.days_base,
+         practid, treat = arm_stage1) %>% 
+  mutate(female = as.character(female),
+         period = "base")
+
+data_sens_3mo <- data_sens %>% 
+  select(matches("drink_q_") & matches("3mo"),
+         age, tribe_recoded, employ,
+         marital, live, insurance, female,
+         income_self, income_house,
+         education, 
+         drinking.days = drinking.days_3mo,
+         practid, treat = arm_stage1) %>% 
+  # remove _3mo
+  rename_with(~ str_remove(., "_3mo$")) %>% 
+  mutate(female = as.character(female),
+         period = "3mo")
+
+data_sens_imp <- data_sens_base %>% 
+  bind_rows(data_sens_3mo) 
+predMatrix <- make.predictorMatrix(data_sens_imp)
+
+predMatrix[, c("practid", "treat", "period")] <- 0  # Prevent vars from being used as a predictor
+predMatrix[c("practid", "treat", "period"), ] <- -2  # Prevent vars from being imputed
+
+
+# imp_drinking_days <- mice(data_sens_imp, m=100, maxit=50, seed=54123,
+#                           method="pmm", predictorMatrix = predMatrix,
+#                           n.burn=100)
+# saveRDS(imp_drinking_days, file = file.path(proj, "3months", "PLOS_Medicine_July2025",
+#                                             "data", "data_sens_drinking_days_imputed.RDS"))
+# Loading the imputed dataset
+imp_drinking_days <- readRDS(file.path(proj, "3months", "PLOS_Medicine_July2025",
+                                       "data", "data_sens_drinking_days_imputed.RDS"))
+
+```
+
+
+```{r}
+#| tbl-cap: "NBM Model Results after imputation - Drinking Days"
+#| label: tbl-imp-drinking-datys
+
+imp_drinking_days <- imp_drinking_days |> 
+  complete(action="long", include=T) |> 
+  mutate(period = factor(period, levels = c("base", "3mo")),
+         treat = factor(treat, levels = c("Usual care", "Intervention"))) |> 
+  as.mids()
+
+X <- model.matrix(~period * treat, data = complete(imp_drinking_days, 1))
+Xalt <- X[, c("period3mo", "period3mo:treatIntervention")]
+
+models <- with(imp_drinking_days, 
+               glmmTMB(drinking.days ~  Xalt + (1|practid), 
+                       family = nbinom2))
+models %>% 
+  tbl_regression(exponentiate = T)
+```
+
+In order to generate the p values and figures, I will use one of the imputed versions for the models.
+
+```{r}
+data_drinking_days <- complete(imp_drinking_days, 1)
+
+X <- model.matrix(~period * treat, data = data_drinking_days)
+Xalt <- X[, c("period3mo", "period3mo:treatIntervention")]
+
+drinking.days_nbm <- glmmTMB(drinking.days ~  Xalt + (1|practid), 
+                             family = nbinom2, 
+                             data = data_drinking_days)
+
+predicted_means_table <- bind_rows(predicted_means_table,
+                                   data_drinking_days |> 
+                                     select(period, treat) |> 
+                                     bind_cols(pred = drinking.days_nbm |> 
+                                                 predict(newdata = data_drinking_days, 
+                                                         type = "response")) |> 
+                                     group_by(period, treat) |>
+                                     summarize(mean = mean(pred)) |> 
+                                     mutate(across(where(is.numeric), ~ round(.x, 1))) |> 
+                                     mutate(variable = "Drinking Days"))
+
+
+stats_drinking.days_imp <- summary(drinking.days_nbm)
+stats_drinking.days_imp <- as.data.frame(stats_drinking.days_imp$coefficients$cond)
+stats_drinking.days_imp <- tibble::rownames_to_column(stats_drinking.days_imp, "contrast") %>% 
+  select(-`z value`) %>% 
+  mutate(var = "drinking.days")
+
+# Calculate confidence intervals
+ci <- tibble::rownames_to_column(as.data.frame(confint(drinking.days_nbm)), "contrast") %>% 
+  mutate_if(is.numeric, exp) %>% 
+  mutate(contrast = dplyr::recode(contrast, "cond.Xaltperiod3mo" = "Xaltperiod3mo",
+                                  "cond.Xaltperiod3mo:treatIntervention" = "Xaltperiod3mo:treatIntervention"))
+# Merge the statistics with confidence intervals
+stats_drinking.days_imp <- stats_drinking.days_imp %>% 
+  left_join(ci %>% select(-Estimate), by=join_by(contrast==contrast))
+stats_drinking.days_imp |> 
+  mutate(across(where(is.numeric), ~ round(.x, 2))) %>% 
+  gt()
+```
+
+##### Mean Predicted Change
+
+```{r}
+# Commented code to avoid re-running the bootstrap process
+# Initialize lists
+# boot_results_intervention <- list()
+# boot_results_usual <- list()
+# boot_results_did <- list()
+# 
+# # Loop over each of the 10 imputed datasets
+# for (i in 1:100) {
+#   # Get the i-th complete dataset
+#   data_i <- complete(imp_drinking_days, i) %>%
+#     select(drinking.days, treat, period, practid)
+# 
+#   # Ensure proper factor levels
+#   data_i$period <- factor(data_i$period, levels = c("base", "3mo"))
+#   data_i$treat <- factor(data_i$treat, levels = c("Usual care", "Intervention"))
+# 
+#   # Model matrix
+#   Xalt <- model.matrix(~ period * treat, data = data_i)
+#   Xalt <- Xalt[, c("period3mo", "period3mo:treatIntervention")]
+# 
+#   # Fit model
+#   model_i <- glmmTMB(drinking.days ~ Xalt + (1 | practid),
+#                      family = nbinom2,
+#                      data = data_i
+#   )
+# 
+#   # Predict expected values
+#   data_i$pred <- predict(model_i, newdata = data_i, type = "response")
+# 
+#   # Group-specific bootstraps
+#   boot_data_intervention <- data_i %>% filter(treat == "Intervention")
+#   boot_data_usual <- data_i %>% filter(treat == "Usual care")
+# 
+#   boot_interv <- boot(data = boot_data_intervention,
+#                       statistic = mean_diff_time_func,
+#                       R = 1000)
+#   boot_usual <- boot(data = boot_data_usual,
+#                      statistic = mean_diff_time_func,
+#                      R = 1000)
+# 
+#   # DID bootstrap on full predicted dataset
+#   boot_did <- boot(data = data_i, statistic = bootstrap_did, R = 1000)
+# 
+#   # Store bootstrap replicates
+#   boot_results_intervention[[i]] <- boot_interv$t
+#   boot_results_usual[[i]] <- boot_usual$t
+#   boot_results_did[[i]] <- boot_did$t
+# }
+# 
+# # Combine all bootstrap samples across imputations
+# all_interv <- unlist(boot_results_intervention)
+# all_usual <- unlist(boot_results_usual)
+# all_did <- unlist(boot_results_did)
+# 
+# # Final summary table
+# final_results <- final_results |> 
+#   bind_rows(tibble(group = c("Intervention", "Usual Care", "DiD"),
+#                    diff = c(mean(all_interv), mean(all_usual), mean(all_did)),
+#                    ci_low = c(quantile(all_interv, 0.025),
+#                               quantile(all_usual, 0.025),
+#                               quantile(all_did, 0.025)),
+#                    ci_high = c(quantile(all_interv, 0.975),
+#                                quantile(all_usual, 0.975),
+#                                quantile(all_did, 0.975)),
+#                    variable = "Drinking Days"
+#   ))
+```
+
+```{r}
+#| label: tbl-drink-days-mice-boot
+#| tbl-cap: "Within and across group differences and DiD in the predicted mean Drinking Days in the inputed model"
+final_results %>% 
+  filter(variable == "Drinking Days") %>% 
+  mutate(across(where(is.numeric), ~ round(.x, 2))) %>% 
+  gt()
+```
+
+
+#### Drinking Amount - NBM
+
+In this section, I will perform the same imputation and modeling process for the amount of alcohol consumed. The imputation will be done using the same variables as before, but now focusing on the `drinking.amount` variable instead of `binge.days`.
+
+Modeling for the amount of alcohol consumed will be done using a negative binomial model (NBM) to account for the count nature of the data. The model will include treatment and time period interactions to estimate changes within each group and the treatment effect as the Difference-in-Differences (DiD) between the intervention and usual care groups. Predictions from the fitted model will be used to calculate average changes over time, capturing the longitudinal dynamics of drinking amount.
+```{r}
+# Imputation
+data_sens_base <- data_sens %>% 
+  select(matches("drink_q_") & !matches("3mo|6mo|9mo|12mo|24mo"),
+         age, tribe_recoded, employ,
+         marital, live, insurance, female,
+         income_self, income_house,
+         education, drinking.amount = drinking.amount_base,
+         practid, treat = arm_stage1) %>% 
+  mutate(female = as.character(female),
+         period = "base")
+
+data_sens_3mo <- data_sens %>% 
+  select(matches("drink_q_") & matches("3mo"),
+         age, tribe_recoded, employ,
+         marital, live, insurance, female,
+         income_self, income_house,
+         education, 
+         drinking.amount = drinking.amount_3mo,
+         practid, treat = arm_stage1) %>% 
+  # remove _3mo
+  rename_with(~ str_remove(., "_3mo$")) %>% 
+  mutate(female = as.character(female),
+         period = "3mo")
+
+data_sens_imp <- data_sens_base %>% 
+  bind_rows(data_sens_3mo) 
+predMatrix <- make.predictorMatrix(data_sens_imp)
+
+predMatrix[, c("practid", "treat", "period")] <- 0  # Prevent vars from being used as a predictor
+predMatrix[c("practid", "treat", "period"), ] <- -2  # Prevent vars from being imputed
+
+
+# imp_drinking_amount <- mice(data_sens_imp, m=100, maxit=50, seed=54123,
+#                             method="pmm", predictorMatrix = predMatrix,
+#                             n.burn=100)
+# saveRDS(imp_drinking_amount, file = file.path(proj, "3months", "PLOS_Medicine_July2025",
+#                                               "data", "data_sens_drinking_amount_imputed.RDS"))
+# Loading the imputed dataset
+imp_drinking_amount <- readRDS(file.path(proj, "3months", "PLOS_Medicine_July2025",
+                                         "data", "data_sens_drinking_amount_imputed.RDS"))
+
+```
+
+
+```{r}
+#| tbl-cap: "NBM Model Results after imputation - Drinking Amount"
+#| label: tbl-imp-drinking-amount
+#| 
+imp_drinking_amount <- imp_drinking_amount |> 
+  complete(action="long", include=T) |> 
+  mutate(period = factor(period, levels = c("base", "3mo")),
+         treat = factor(treat, levels = c("Usual care", "Intervention"))) |> 
+  as.mids()
+
+models <- with(imp_drinking_amount, 
+               glmmTMB(drinking.amount ~  period * treat + (1|practid), 
+                       family = nbinom2))
+models %>% 
+  tbl_regression(exponentiate = T)
+```
+
+In order to generate the p values and figures, I will use one of the imputed versions for the models.
+
+```{r}
+data_drinking_amount <- complete(imp_drinking_amount, 1)
+
+X <- model.matrix(~period * treat, data = data_drinking_amount)
+Xalt <- X[, c("period3mo", "period3mo:treatIntervention")]
+
+drinking.amount_nbm <- glmmTMB(drinking.amount ~  Xalt + (1|practid), 
+                               family = nbinom2, 
+                               data = data_drinking_amount)
+
+predicted_means_table <- bind_rows(predicted_means_table,
+                                   data_drinking_amount |> 
+                                     select(period, treat) |> 
+                                     bind_cols(pred = drinking.amount_nbm |> 
+                                                 predict(newdata = data_drinking_amount, type = "response")) |> 
+                                     group_by(period, treat) |>
+                                     summarize(mean = mean(pred)) |> 
+                                     mutate(across(where(is.numeric), ~ round(.x, 1)))  |> 
+                                     mutate(variable = "Drinking Amount"))
+
+
+stats_drinking.amount_imp <- summary(drinking.amount_nbm)
+stats_drinking.amount_imp <- as.data.frame(stats_drinking.amount_imp$coefficients$cond)
+stats_drinking.amount_imp <- tibble::rownames_to_column(stats_drinking.amount_imp, "contrast") %>% 
+  select(-`z value`) %>% 
+  mutate(var = "drinking.amount")
+
+# Calculate confidence intervals
+ci <- tibble::rownames_to_column(as.data.frame(confint(drinking.amount_nbm)), "contrast") %>% 
+  mutate_if(is.numeric, exp) %>% 
+  mutate(contrast = dplyr::recode(contrast, "cond.Xaltperiod3mo" = "Xaltperiod3mo",
+                                  "cond.Xaltperiod3mo:treatIntervention" = "Xaltperiod3mo:treatIntervention"))
+# Merge the statistics with confidence intervals
+stats_drinking.amount_imp <- stats_drinking.amount_imp %>% 
+  left_join(ci %>% select(-Estimate), by=join_by(contrast==contrast))
+stats_drinking.amount_imp |> 
+  mutate(across(where(is.numeric), ~ round(.x, 2))) %>% 
+  gt()
+```
+
+##### Mean Predicted Change
+
+```{r}
+# Commented code to avoid re-running the bootstrap process
+# # Initialize lists
+# boot_results_intervention <- list()
+# boot_results_usual <- list()
+# boot_results_did <- list()
+# 
+# # Loop over each of the 10 imputed datasets
+# for (i in 1:100) {
+#   # Get the i-th complete dataset
+#   data_i <- complete(imp_drinking_amount, i) %>%
+#     select(drinking.amount, treat, period, practid)
+#   
+#   # Ensure proper factor levels
+#   data_i$period <- factor(data_i$period, levels = c("base", "3mo"))
+#   data_i$treat <- factor(data_i$treat, levels = c("Usual care", "Intervention"))
+#   
+#   # Model matrix
+#   Xalt <- model.matrix(~ period * treat, data = data_i)
+#   Xalt <- Xalt[, c("period3mo", "period3mo:treatIntervention")]
+#   
+#   # Fit model
+#   model_i <- glmmTMB(drinking.amount ~ Xalt + (1 | practid),
+#                      family = nbinom2,
+#                      data = data_i
+#   )
+#   
+#   # Predict expected values
+#   data_i$pred <- predict(model_i, newdata = data_i, type = "response")
+#   
+#   # Group-specific bootstraps
+#   boot_data_intervention <- data_i %>% filter(treat == "Intervention")
+#   boot_data_usual <- data_i %>% filter(treat == "Usual care")
+#   
+#   boot_interv <- boot(data = boot_data_intervention,
+#                       statistic = mean_diff_time_func,
+#                       R = 1000)
+#   boot_usual <- boot(data = boot_data_usual,
+#                      statistic = mean_diff_time_func,
+#                      R = 1000)
+#   
+#   # DID bootstrap on full predicted dataset
+#   boot_did <- boot(data = data_i, statistic = bootstrap_did, R = 1000)
+#   
+#   # Store bootstrap replicates
+#   boot_results_intervention[[i]] <- boot_interv$t
+#   boot_results_usual[[i]] <- boot_usual$t
+#   boot_results_did[[i]] <- boot_did$t
+# }
+# 
+# # Combine all bootstrap samples across imputations
+# all_interv <- unlist(boot_results_intervention)
+# all_usual <- unlist(boot_results_usual)
+# all_did <- unlist(boot_results_did)
+# 
+# # Final summary table
+# final_results <- final_results |> 
+#   bind_rows(tibble(group = c("Intervention", "Usual Care", "DiD"),
+#                    diff = c(mean(all_interv), mean(all_usual), mean(all_did)),
+#                    ci_low = c(quantile(all_interv, 0.025),
+#                               quantile(all_usual, 0.025),
+#                               quantile(all_did, 0.025)),
+#                    ci_high = c(quantile(all_interv, 0.975),
+#                                quantile(all_usual, 0.975),
+#                                quantile(all_did, 0.975)),
+#                    variable = "Drinking Amount"
+#   ))
+
+```
+
+```{r}
+#| label: tbl-drink-amount-mice-boot
+#| tbl-cap: "Within and across group differences and DiD in the predicted mean Drinking Days in the inputed model"
+final_results %>% 
+  filter(variable == "Drinking Amount") %>% 
+  mutate(across(where(is.numeric), ~ round(.x, 2))) %>% 
+  gt()
+```
+
+
+#### AUDIT - LMER
+
+In this section, I will perform the same imputation and modeling process for the AUDIT score. The imputation will be done using the same variables as before, but now focusing on the `audit_sum` variable instead of `binge.days`.
+
+Modeling for the AUDIT score will be done using a linear mixed-effects model (LMER) to account for the repeated measures structure of the data. The model will include treatment and time period interactions to estimate changes within each group and the treatment effect as the Difference-in-Differences (DiD) between the intervention and usual care groups. Predictions from the fitted model will be used to calculate average changes over time, capturing the longitudinal dynamics of AUDIT scores.
+
+```{r}
+# Imputation
+data_sens_base <- data_sens %>% 
+  select(matches("audit") & !matches("3mo|6mo|9mo|12mo|24mo|over8|complete"),
+         age, tribe_recoded, employ,
+         marital, live, insurance, female,
+         income_self, income_house,
+         education, 
+         audit_sum = audit_sum_base,
+         practid, treat = arm_stage1) %>% 
+  mutate(female = as.character(female),
+         period = "base")
+
+data_sens_3mo <- data_sens %>% 
+  select(matches("audit") & matches("3mo") & !matches("over8|complete"),
+         age, tribe_recoded, employ,
+         marital, live, insurance, female,
+         income_self, income_house,
+         education, 
+         practid, treat = arm_stage1) |> 
+  rename_with(~ str_remove(., "_3mo$")) %>% 
+  mutate(female = as.character(female),
+         period = "3mo")
+
+data_sens_imp <- data_sens_base %>% 
+  bind_rows(data_sens_3mo) 
+predMatrix <- make.predictorMatrix(data_sens_imp)
+
+predMatrix[, c("practid", "treat", "period")] <- 0  # Prevent vars from being used as a predictor
+predMatrix[c("practid", "treat", "period"), ] <- -2  # Prevent vars from being imputed
+
+
+# imp_audit <- mice(data_sens_imp, m=100, maxit=50, seed=54123,
+#                   method="pmm", predictorMatrix = predMatrix,
+#                   n.burn=100)
+# saveRDS(imp_audit, file = file.path(proj, "3months", "PLOS_Medicine_July2025",
+#                                     "data", "data_sens_audit_imputed.RDS"))
+# Loading the imputed dataset
+imp_audit <- readRDS(file.path(proj, "3months", "PLOS_Medicine_July2025",
+                               "data", "data_sens_audit_imputed.RDS"))
+
+```
+
+
+```{r}
+#| tbl-cap: "LMER Model Results after imputation - AUDIT"
+#| label: tbl-imp-audit
+#| 
+imp_audit <- imp_audit |> 
+  complete(action="long", include=T) |> 
+  mutate(period = factor(period, levels = c("base", "3mo")),
+         treat = factor(treat, levels = c("Usual care", "Intervention"))) |> 
+  as.mids()
+
+models <- with(imp_audit, 
+               lmerTest::lmer(audit_sum ~ period * treat + (1 | practid)))
+models %>% 
+  tbl_regression()
+```
+
+In order to generate the p values and figures, I will use one of the imputed versions for the models.
+```{r}
+data_audit <- complete(imp_audit, 1)
+
+X <- model.matrix(~period * treat, data = data_audit)
+Xalt <- X[, c("period3mo", "period3mo:treatIntervention")]
+
+audit_lmer <- lmerTest::lmer(audit_sum ~ Xalt + (1 | practid), 
+                             data = data_audit)
+predicted_means_table <- bind_rows(predicted_means_table,
+                                   data_audit |> 
+                                     select(period, treat) |> 
+                                     bind_cols(pred = audit_lmer |> 
+                                                 predict(newdata = data_audit, type = "response")) |> 
+                                     group_by(period, treat) |>
+                                     summarize(mean = mean(pred)) |> 
+                                     mutate(across(where(is.numeric), ~ round(.x, 1))) |> 
+                                     mutate(variable = "AUDIT"))
+
+
+
+stats_audit_imp <- summary(audit_lmer)
+stats_audit_imp <- as.data.frame(stats_audit_imp$coefficients)
+stats_audit_imp <- tibble::rownames_to_column(stats_audit_imp, "contrast") %>% 
+  select(-`t value`) %>% 
+  mutate(var = "audit")
+
+# Calculate confidence intervals
+ci_audit <- tibble::rownames_to_column(as.data.frame(confint(audit_lmer)), "contrast") %>% 
+  mutate(contrast = dplyr::recode(contrast, "cond.Xaltperiod3mo" = "Xaltperiod3mo",
+                                  "cond.Xaltperiod3mo:treatIntervention" = "Xaltperiod3mo:treatIntervention"))
+# Merge the statistics with confidence intervals
+stats_audit_imp <- stats_audit_imp %>% 
+  left_join(ci_audit, by=join_by(contrast==contrast))
+
+stats_audit_imp |> 
+  mutate(across(where(is.numeric), ~ round(.x, 2))) %>% 
+  gt()
+```
+##### Mean Predicted Change
+
+```{r}
+# Commented code to avoid re-running the bootstrap process
+# # Initialize lists
+# boot_results_intervention <- list()
+# boot_results_usual <- list()
+# boot_results_did <- list()
+# 
+# # Loop over each of the 10 imputed datasets
+# for (i in 1:100) {
+#   # Get the i-th complete dataset
+#   data_i <- complete(imp_audit, i) %>%
+#     select(audit_sum, treat, period, practid)
+#   
+#   # Ensure proper factor levels
+#   data_i$period <- factor(data_i$period, levels = c("base", "3mo"))
+#   data_i$treat <- factor(data_i$treat, levels = c("Usual care", "Intervention"))
+#   
+#   # Model matrix
+#   Xalt <- model.matrix(~ period * treat, data = data_i)
+#   Xalt <- Xalt[, c("period3mo", "period3mo:treatIntervention")]
+#   
+#   # Fit model
+#   model_i <- lmerTest::lmer(audit_sum ~ Xalt + (1 | practid), 
+#                             data = data_i)
+#   
+#   # Predict expected values
+#   data_i$pred <- predict(model_i, newdata = data_i, type = "response")
+#   
+#   # Group-specific bootstraps
+#   boot_data_intervention <- data_i %>% filter(treat == "Intervention")
+#   boot_data_usual <- data_i %>% filter(treat == "Usual care")
+#   
+#   boot_interv <- boot(data = boot_data_intervention,
+#                       statistic = mean_diff_time_func,
+#                       R = 1000)
+#   boot_usual <- boot(data = boot_data_usual,
+#                      statistic = mean_diff_time_func,
+#                      R = 1000)
+#   
+#   # DID bootstrap on full predicted dataset
+#   boot_did <- boot(data = data_i, statistic = bootstrap_did, R = 1000)
+#   
+#   # Store bootstrap replicates
+#   boot_results_intervention[[i]] <- boot_interv$t
+#   boot_results_usual[[i]] <- boot_usual$t
+#   boot_results_did[[i]] <- boot_did$t
+# }
+# 
+# # Combine all bootstrap samples across imputations
+# all_interv <- unlist(boot_results_intervention)
+# all_usual <- unlist(boot_results_usual)
+# all_did <- unlist(boot_results_did)
+# 
+# # Final summary table
+# final_results <- final_results |> 
+#   bind_rows(tibble(group = c("Intervention", "Usual Care", "DiD"),
+#                    diff = c(mean(all_interv), mean(all_usual), mean(all_did)),
+#                    ci_low = c(quantile(all_interv, 0.025),
+#                               quantile(all_usual, 0.025),
+#                               quantile(all_did, 0.025)),
+#                    ci_high = c(quantile(all_interv, 0.975),
+#                                quantile(all_usual, 0.975),
+#                                quantile(all_did, 0.975)),
+#                    variable = "AUDIT"
+#   ))
+
+```
+
+```{r}
+#| label: tbl-audit-mice-boot
+#| tbl-cap: "Within and across group differences and DiD in the predicted mean AUDIT in the inputed model"
+final_results %>% 
+  filter(variable == "Drinking Amount") %>% 
+  mutate(across(where(is.numeric), ~ round(.x, 2))) %>% 
+  gt()
+```
+
+
+
+#### DrInC - LMER
+
+In this section, I will perform the same imputation and modeling process for the DrInC score. The imputation will be done using the same variables as before, but now focusing on the `drinc_sum` variable instead of `binge.days`.
+
+Modeling for the DrInC score will be done using a linear mixed-effects model (LMER) to account for the repeated measures structure of the data. The model will include treatment and time period interactions to estimate changes within each group and the treatment effect as the Difference-in-Differences (DiD) between the intervention and usual care groups. Predictions from the fitted model will be used to calculate average changes over time, capturing the longitudinal dynamics of DrInC scores.
+
+
+```{r}
+# Imputation
+data_sens_base <- data_sens %>% 
+  select(matches("drinc") & !matches("3mo|6mo|9mo|12mo|24mo|complete"),
+         age, tribe_recoded, employ,
+         marital, live, insurance, female,
+         income_self, income_house,
+         education, 
+         drinc_sum = drinc_sum_base,
+         practid, treat = arm_stage1) %>% 
+  mutate(female = as.character(female),
+         period = "base") 
+
+data_sens_3mo <- data_sens %>% 
+  select(matches("drinc") & matches("3mo") & !matches("complete"),
+         age, tribe_recoded, employ,
+         marital, live, insurance, female,
+         income_self, income_house,
+         education, 
+         practid, treat = arm_stage1) |>
+  rename_with(~ str_remove(., "_3mo$")) %>% 
+  mutate(female = as.character(female),
+         period = "3mo")
+
+data_sens_imp <- data_sens_base %>% 
+  bind_rows(data_sens_3mo) 
+predMatrix <- make.predictorMatrix(data_sens_imp)
+
+predMatrix[, c("practid", "treat", "period")] <- 0  # Prevent vars from being used as a predictor
+predMatrix[c("practid", "treat", "period"), ] <- -2  # Prevent vars from being imputed
+
+
+# imp_drinc <- mice(data_sens_imp, m=100, maxit=50, seed=54123,
+#                   method="pmm", predictorMatrix = predMatrix,
+#                   n.burn=100)
+# saveRDS(imp_drinc, file = file.path(proj, "3months", "PLOS_Medicine_July2025",
+#                                     "data", "data_sens_drinc_imputed.RDS"))
+# Loading the imputed dataset
+imp_drinc <- readRDS(file.path(proj, "3months", "PLOS_Medicine_July2025",
+                               "data", "data_sens_drinc_imputed.RDS"))
+
+```
+
+
+```{r}
+#| tbl-cap: "LMER Model Results after imputation - DrInC"
+#| label: tbl-imp-drinc
+#| 
+imp_drinc <- imp_drinc |> 
+  complete(action="long", include=T) |> 
+  mutate(period = factor(period, levels = c("base", "3mo")),
+         treat = factor(treat, levels = c("Usual care", "Intervention"))) |> 
+  as.mids()
+
+models <- with(imp_drinc, 
+               lmerTest::lmer(drinc_sum ~ period * treat + (1 | practid)))
+models %>% 
+  tbl_regression()
+```
+
+In order to generate the p values and figures, I will use one of the imputed versions for the models.
+```{r}
+data_drinc <- complete(imp_drinc, 1)
+
+X <- model.matrix(~period * treat, data = data_drinc)
+Xalt <- X[, c("period3mo", "period3mo:treatIntervention")]
+
+drinc_lmer <- lmerTest::lmer(drinc_sum ~ Xalt + (1 | practid), 
+                             data = data_drinc)
+
+predicted_means_table <- bind_rows(predicted_means_table,
+                                   data_drinc |> 
+                                     select(period, treat) |> 
+                                     bind_cols(pred = drinc_lmer |> 
+                                                 predict(newdata = data_drinc, type = "response")) |> 
+                                     group_by(period, treat) |>
+                                     summarize(mean = mean(pred)) |> 
+                                     mutate(across(where(is.numeric), ~ round(.x, 1))) |> 
+                                     mutate(variable = "DrInC"))
+
+
+stats_drinc_imp <- summary(drinc_lmer)
+stats_drinc_imp <- as.data.frame(stats_drinc_imp$coefficients)
+stats_drinc_imp <- tibble::rownames_to_column(stats_drinc_imp, "contrast") %>% 
+  select(-`t value`) %>% 
+  mutate(var = "drinc")
+
+# Calculate confidence intervals
+ci_drinc <- tibble::rownames_to_column(as.data.frame(confint(drinc_lmer)), "contrast") %>% 
+  mutate(contrast = dplyr::recode(contrast, "cond.Xaltperiod3mo" = "Xaltperiod3mo",
+                                  "cond.Xaltperiod3mo:treatIntervention" = "Xaltperiod3mo:treatIntervention"))
+# Merge the statistics with confidence intervals
+stats_drinc_imp <- stats_drinc_imp %>% 
+  left_join(ci_drinc, by=join_by(contrast==contrast))
+
+stats_drinc_imp |> 
+  mutate(across(where(is.numeric), ~ round(.x, 2))) %>% 
+  gt()
+```
+
+##### Mean Predicted Change
+
+```{r}
+# Commented code to avoid re-running the bootstrap process
+# Initialize lists
+# boot_results_intervention <- list()
+# boot_results_usual <- list()
+# boot_results_did <- list()
+# 
+# # Loop over each of the 10 imputed datasets
+# for (i in 1:100) {
+#   # Get the i-th complete dataset
+#   data_i <- complete(imp_drinc, i) %>%
+#     select(drinc_sum, treat, period, practid)
+#   
+#   # Ensure proper factor levels
+#   data_i$period <- factor(data_i$period, levels = c("base", "3mo"))
+#   data_i$treat <- factor(data_i$treat, levels = c("Usual care", "Intervention"))
+#   
+#   # Model matrix
+#   Xalt <- model.matrix(~ period * treat, data = data_i)
+#   Xalt <- Xalt[, c("period3mo", "period3mo:treatIntervention")]
+#   
+#   # Fit model
+#   model_i <- lmerTest::lmer(drinc_sum ~ Xalt + (1 | practid), 
+#                             data = data_i)
+#   
+#   # Predict expected values
+#   data_i$pred <- predict(model_i, newdata = data_i, type = "response")
+#   
+#   # Group-specific bootstraps
+#   boot_data_intervention <- data_i %>% filter(treat == "Intervention")
+#   boot_data_usual <- data_i %>% filter(treat == "Usual care")
+#   
+#   boot_interv <- boot(data = boot_data_intervention,
+#                       statistic = mean_diff_time_func,
+#                       R = 1000)
+#   boot_usual <- boot(data = boot_data_usual,
+#                      statistic = mean_diff_time_func,
+#                      R = 1000)
+#   
+#   # DID bootstrap on full predicted dataset
+#   boot_did <- boot(data = data_i, statistic = bootstrap_did, R = 1000)
+#   
+#   # Store bootstrap replicates
+#   boot_results_intervention[[i]] <- boot_interv$t
+#   boot_results_usual[[i]] <- boot_usual$t
+#   boot_results_did[[i]] <- boot_did$t
+# }
+# 
+# # Combine all bootstrap samples across imputations
+# all_interv <- unlist(boot_results_intervention)
+# all_usual <- unlist(boot_results_usual)
+# all_did <- unlist(boot_results_did)
+# 
+# # Final summary table
+# final_results <- final_results |> 
+#   bind_rows(tibble(group = c("Intervention", "Usual Care", "DiD"),
+#                    diff = c(mean(all_interv), mean(all_usual), mean(all_did)),
+#                    ci_low = c(quantile(all_interv, 0.025),
+#                               quantile(all_usual, 0.025),
+#                               quantile(all_did, 0.025)),
+#                    ci_high = c(quantile(all_interv, 0.975),
+#                                quantile(all_usual, 0.975),
+#                                quantile(all_did, 0.975)),
+#                    variable = "DrInC"
+#   ))
+
+```
+
+```{r}
+#| label: tbl-drinc-mice-boot
+#| tbl-cap: "Within and across group differences and DiD in the predicted mean DrInC in the inputed model"
+final_results %>% 
+  filter(variable == "DrInC") %>% 
+  mutate(across(where(is.numeric), ~ round(.x, 2))) %>% 
+  gt()
+```
+
+
+#### PHQ-9 - LMER
+
+In this section, I will perform the same imputation and modeling process for the PHQ-9 score. The imputation will be done using the same variables as before, but now focusing on the `phq_sum` variable instead of `binge.days`.
+
+Modeling for the PHQ-9 score will be done using a linear mixed-effects model (LMER) to account for the repeated measures structure of the data. The model will include treatment and time period interactions to estimate changes within each group and the treatment effect as the Difference-in-Differences (DiD) between the intervention and usual care groups. Predictions from the fitted model will be used to calculate average changes over time, capturing the longitudinal dynamics of PHQ-9 scores.
+
+```{r}
+# Imputation
+data_sens_base <- data_sens %>% 
+  select(matches("phq") & !matches("3mo|6mo|9mo|12mo|24mo|complete"),
+         age, tribe_recoded, employ,
+         marital, live, insurance, female,
+         income_self, income_house,
+         education, 
+         phq_sum = phq_sum_base,
+         practid, treat = arm_stage1) %>% 
+  mutate(female = as.character(female),
+         period = "base") 
+
+data_sens_3mo <- data_sens %>% 
+  select(matches("phq") & matches("3mo") & !matches("complete"),
+         age, tribe_recoded, employ,
+         marital, live, insurance, female,
+         income_self, income_house,
+         education, 
+         practid, treat = arm_stage1) |> 
+  rename_with(~ str_remove(., "_3mo$")) %>% 
+  mutate(female = as.character(female),
+         period = "3mo")
+
+data_sens_imp <- data_sens_base %>% 
+  bind_rows(data_sens_3mo) 
+predMatrix <- make.predictorMatrix(data_sens_imp)
+
+predMatrix[, c("practid", "treat", "period")] <- 0  # Prevent vars from being used as a predictor
+predMatrix[c("practid", "treat", "period"), ] <- -2  # Prevent vars from being imputed
+
+
+# imp_phq <- mice(data_sens_imp, m=100, maxit=50, seed=54123,
+#                 method="pmm", predictorMatrix = predMatrix,
+#                 n.burn=100)
+# saveRDS(imp_phq, file = file.path(proj, "3months", "PLOS_Medicine_July2025",
+                                  # "data", "data_sens_phq_imputed.RDS"))
+# Loading the imputed dataset
+imp_phq <- readRDS(file.path(proj, "3months", "PLOS_Medicine_July2025",
+                             "data", "data_sens_phq_imputed.RDS"))
+
+```
+
+
+```{r}
+#| tbl-cap: "LMER Model Results after imputation - PHQ"
+#| label: tbl-imp-phq
+#| 
+imp_phq <- imp_phq |> 
+  complete(action="long", include=T) |> 
+  mutate(period = factor(period, levels = c("base", "3mo")),
+         treat = factor(treat, levels = c("Usual care", "Intervention"))) |> 
+  as.mids()
+
+models <- with(imp_phq, 
+               lmerTest::lmer(phq_sum ~ period * treat + (1 | practid)))
+models %>% 
+  tbl_regression()
+```
+In order to generate the p values and figures, I will use one of the imputed versions for the models.
+```{r}
+data_phq <- complete(imp_phq, 1)
+
+X <- model.matrix(~period * treat, data = data_phq)
+Xalt <- X[, c("period3mo", "period3mo:treatIntervention")]
+
+phq_lmer <- lmerTest::lmer(phq_sum ~ Xalt + (1 | practid), 
+                             data = data_phq)
+
+predicted_means_table <- bind_rows(predicted_means_table,
+                                   data_phq |> 
+                                     select(period, treat) |> 
+                                     bind_cols(pred = phq_lmer |> 
+                                                 predict(newdata = data_phq, type = "response")) |> 
+                                     group_by(period, treat) |>
+                                     summarize(mean = mean(pred)) |> 
+                                     mutate(across(where(is.numeric), ~ round(.x, 1))) |> 
+                                     mutate(variable = "PHQ9"))
+
+
+
+stats_phq_imp <- summary(phq_lmer)
+stats_phq_imp <- as.data.frame(stats_phq_imp$coefficients)
+stats_phq_imp <- tibble::rownames_to_column(stats_phq_imp, "contrast") %>% 
+  select(-`t value`) %>% 
+  mutate(var = "phq")
+
+# Calculate confidence intervals
+ci_phq <- tibble::rownames_to_column(as.data.frame(confint(phq_lmer)), "contrast") %>% 
+  mutate(contrast = dplyr::recode(contrast, "cond.Xaltperiod3mo" = "Xaltperiod3mo",
+                                  "cond.Xaltperiod3mo:treatIntervention" = "Xaltperiod3mo:treatIntervention"))
+# Merge the statistics with confidence intervals
+stats_phq_imp <- stats_phq_imp %>% 
+  left_join(ci_phq, by=join_by(contrast==contrast))
+
+stats_phq_imp |> 
+  mutate(across(where(is.numeric), ~ round(.x, 2))) %>% 
+  gt()
+```
+##### Mean Predicted Change
+
+```{r}
+# Commented code to avoid re-running the bootstrap process
+# Initialize lists
+# boot_results_intervention <- list()
+# boot_results_usual <- list()
+# boot_results_did <- list()
+# 
+# # Loop over each of the 10 imputed datasets
+# for (i in 1:100) {
+#   # Get the i-th complete dataset
+#   data_i <- complete(imp_phq, i) %>%
+#     select(phq_sum, treat, period, practid)
+#   
+#   # Ensure proper factor levels
+#   data_i$period <- factor(data_i$period, levels = c("base", "3mo"))
+#   data_i$treat <- factor(data_i$treat, levels = c("Usual care", "Intervention"))
+#   
+#   # Model matrix
+#   Xalt <- model.matrix(~ period * treat, data = data_i)
+#   Xalt <- Xalt[, c("period3mo", "period3mo:treatIntervention")]
+#   
+#   # Fit model
+#   model_i <- lmerTest::lmer(phq_sum ~ Xalt + (1 | practid), 
+#                             data = data_i)
+#   
+#   # Predict expected values
+#   data_i$pred <- predict(model_i, newdata = data_i, type = "response")
+#   
+#   # Group-specific bootstraps
+#   boot_data_intervention <- data_i %>% filter(treat == "Intervention")
+#   boot_data_usual <- data_i %>% filter(treat == "Usual care")
+#   
+#   boot_interv <- boot(data = boot_data_intervention,
+#                       statistic = mean_diff_time_func,
+#                       R = 1000)
+#   boot_usual <- boot(data = boot_data_usual,
+#                      statistic = mean_diff_time_func,
+#                      R = 1000)
+#   
+#   # DID bootstrap on full predicted dataset
+#   boot_did <- boot(data = data_i, statistic = bootstrap_did, R = 1000)
+#   
+#   # Store bootstrap replicates
+#   boot_results_intervention[[i]] <- boot_interv$t
+#   boot_results_usual[[i]] <- boot_usual$t
+#   boot_results_did[[i]] <- boot_did$t
+# }
+# 
+# # Combine all bootstrap samples across imputations
+# all_interv <- unlist(boot_results_intervention)
+# all_usual <- unlist(boot_results_usual)
+# all_did <- unlist(boot_results_did)
+# 
+# # Final summary table
+# final_results <- final_results |> 
+#   bind_rows(tibble(group = c("Intervention", "Usual Care", "DiD"),
+#                    diff = c(mean(all_interv), mean(all_usual), mean(all_did)),
+#                    ci_low = c(quantile(all_interv, 0.025),
+#                               quantile(all_usual, 0.025),
+#                               quantile(all_did, 0.025)),
+#                    ci_high = c(quantile(all_interv, 0.975),
+#                                quantile(all_usual, 0.975),
+#                                quantile(all_did, 0.975)),
+#                    variable = "PHQ9"
+#   ))
+
+
+```
+
+```{r}
+#| label: tbl-phq-mice-boot
+#| tbl-cap: "Within and across group differences and DiD in the predicted mean PHQ9 in the inputed model"
+final_results %>% 
+  filter(variable == "PHQ9") %>% 
+  mutate(across(where(is.numeric), ~ round(.x, 2))) %>% 
+  gt()
+```
+
+
+
+# Supplemetary Results, Figures and Tables
+
+## Complete Case results
+
+> These results have now been moved to the supplementary material of the manuscript. These changes were implemented on July 23, 2025.
+
+
+```{r}
+# Setting up Ids that should be removed for each outcome analysis
+remove_ids_binge <- data_subset %>%
+  filter(is.na(binge.days)) %>%
+  pull(practid)
+remove_ids_drinc <- data_subset %>%
+  filter(is.na(drinc_sum)) %>%
+  pull(practid)
+remove_ids_audit <- data_subset %>%
+  filter(is.na(audit_sum)) %>%
+  pull(practid)
+remove_ids_phq <- data_subset %>%
+  filter(is.na(phq_sum)) %>%
+  pull(practid)
+
+```
+
+### Binge Drinking Days
+
+```{r}
+# The outcomes Binge Drinking Days, Drinking Days and Drinking Amount all have the 
+# same pattern of missing data so the object "data_drinking" will be used for modelling of them
+data_drinking <-  data_subset %>% 
+  filter(!practid %in% remove_ids_binge) %>% 
+  # forcing variables to be integers
+  mutate(binge.days = as.integer(binge.days),
+         drinking.days = as.integer(drinking.days),
+         drinking.amount = as.integer(drinking.amount))
+
+X <- model.matrix(~period * treat, data = data_drinking)
+Xalt <- X[, c("period3mo", "period3mo:treatIntervention")]
+
+
+zinbm_binge.days <- glmmTMB(binge.days ~  Xalt + (1|practid), 
+                            zi = ~ treat, 
+                            family = nbinom2, 
+                            data = data_drinking)
+
+stats_binge.days <- summary(zinbm_binge.days)
+stats_binge.days <- as.data.frame(stats_binge.days$coefficients$cond)
+stats_binge.days <- tibble::rownames_to_column(stats_binge.days, "contrast") %>% 
+  select(-`z value`) %>% 
+  mutate(var = "binge.days")
+
+# Calculate confidence intervals
+ci_binge.days <- tibble::rownames_to_column(as.data.frame(confint(zinbm_binge.days)), "contrast") %>% 
+  mutate_if(is.numeric, exp) %>% 
+  mutate(contrast = dplyr::recode(contrast, "cond.Xaltperiod3mo" = "Xaltperiod3mo",
+                                  "cond.Xaltperiod3mo:treatIntervention" = "Xaltperiod3mo:treatIntervention"))
+# Merge the statistics with confidence intervals
+stats_binge.days <- stats_binge.days %>% 
+  left_join(ci_binge.days %>% select(-Estimate), by=join_by(contrast==contrast))
+
+
+#### Bootstrapping --------------------------------------------
+
+##### Differences in 3 Months - Intervention -----------------------------------
+
+pred_df <- data_drinking %>% 
+  select(practid, period, treat)
+
+pred_df <- cbind(pred_df, 
+                 pred = predict(zinbm_binge.days, data_drinking, type="response"))
+
+# Bootstrapping the difference for Intervention group _______
+boot_data_intervention <- pred_df %>%
+  filter(treat == "Intervention")
+
+# Bootstrapping to Estimate Mean Difference in Predictions for Intervention Group
+# This part of the code applies a bootstrapping technique to estimate the variability
+# of the mean difference in predictions between two specific time periods ('3mo' and 'base')
+# for the 'Intervention' group.
+
+# 'boot_result_intervention' is the object where the results will be stored.
+# The 'boot' function is used for performing the bootstrapping.
+
+# Parameters:
+# 1. 'data': Specifies the dataset to be used for bootstrapping, which is the data filtered
+#    for the 'Intervention' group in this case.
+# 2. 'statistic': Refers to the function used to calculate the statistic of interest on each bootstrap sample.
+#    Here, 'mean_diff_time_func' is used, which calculates the mean difference in predictions between
+#    the '3mo' and 'base' periods.
+# 3. 'R': The number of bootstrap replications, set to 1000. This determines how many times the 
+#    bootstrapping process is repeated to build a distribution of the statistic of interest.
+
+# The 'mean_diff_time_func' function works as follows:
+# - It takes a resampled subset of data in each iteration.
+# - Groups this data by the 'period' (either '3mo' or 'base').
+# - Calculates the mean of the 'pred' (predictions) for each group.
+# - Returns the difference of these means (mean at '3mo' - mean at 'base').
+# This process is repeated 1000 times (as specified by R = 1000) to create a distribution
+# of the mean difference, allowing us to understand and quantify the variability of this estimate
+# within the Intervention group.
+boot_result_intervention <- boot(data = boot_data_intervention,
+                                 statistic = mean_diff_time_func,
+                                 R = 1000)
+
+# 95% Confidence Interval for the Intervention group
+conf_int_intervention <- boot.ci(boot_result_intervention, conf = 0.95, type = "perc")
+
+##### Differences in 3 Months - Usual care -----------------------------------
+boot_data_usual <- pred_df %>%
+  filter(treat == "Usual care")
+
+# Bootstrapping to Estimate Mean Difference in Predictions for the Usual Care Group
+# This part of the code applies a bootstrapping technique to estimate the variability
+# of the mean difference in predictions between two specific time periods ('3mo' and 'base')
+# for the 'Usual Care' group.
+
+# 'boot_result_usual' is the object where the results will be stored.
+# The 'boot' function is used for performing the bootstrapping.
+
+# Parameters:
+# 1. 'data': Specifies the dataset to be used for bootstrapping, which is the data filtered
+#    for the 'Usual Care' group in this case.
+# 2. 'statistic': Refers to the function used to calculate the statistic of interest on each bootstrap sample.
+#    Here, 'mean_diff_time_func' is used, which calculates the mean difference in predictions between
+#    the '3mo' and 'base' periods.
+# 3. 'R': The number of bootstrap replications, set to 1000. This determines how many times the 
+#    bootstrapping process is repeated to build a distribution of the statistic of interest.
+
+# The 'mean_diff_time_func' function works as follows:
+# - It takes a resampled subset of data in each iteration.
+# - Groups this data by the 'period' (either '3mo' or 'base').
+# - Calculates the mean of the 'pred' (predictions) for each group.
+# - Returns the difference of these means (mean at '3mo' - mean at 'base').
+# This process is repeated 1000 times (as specified by R = 1000) to create a distribution
+# of the mean difference, allowing us to understand and quantify the variability of this estimate
+# within the Usual Care group.
+
+
+boot_result_usual <- boot(data = boot_data_usual,
+                          statistic = mean_diff_time_func,
+                          R = 1000)
+
+# 95% Confidence Interval for the Usual care group
+conf_int_usual <- boot.ci(boot_result_usual, conf = 0.95, type = "perc")
+
+# plot_bootstrap_results_combined(boot_result_intervention, conf_int_intervention, 
+#                                 boot_result_usual, conf_int_usual,
+#                                 pred_df)
+
+##### Difference in Differences -----------------------------------------------
+
+# Run the bootstrap
+set.seed(12345)
+# Bootstrapping for Difference-in-Differences (DiD) Estimation
+# This section of the code uses bootstrapping to estimate the Difference-in-Differences (DiD),
+# which is a useful method in causal inference to evaluate the effect of a treatment or intervention.
+
+# 'boot_result_did' will store the bootstrapping results.
+# The 'boot' function is used to perform the bootstrapping process.
+
+# Parameters:
+# 1. 'data': This is the complete dataset (pred_df) which includes both the treatment and control groups.
+# 2. 'statistic': The function to calculate the statistic of interest on each bootstrap sample.
+#    'bootstrap_did' is the function used here.
+# 3. 'R': Specifies the number of bootstrap replications, set here to 1000.
+
+# The 'bootstrap_did' function operates as follows:
+# - It samples the data (using provided indices for each bootstrap iteration).
+# - Groups the sampled data by 'treat' (treatment group) and 'period' (time period).
+# - Calculates the mean of the predictions ('pred') for each group.
+# - Checks if all necessary combinations of treatment groups ('Intervention' and 'Usual care')
+#   and time periods ('3mo' and 'base') are present in the sample. If any combination is missing, it returns NA.
+# - Computes the mean differences for both the intervention and control ('Usual care') groups separately
+#   (comparing '3mo' to 'base').
+# - Calculates the DiD estimate by subtracting the mean difference of the control group from that of the intervention group.
+# - This DiD estimate reflects the treatment effect, adjusted for changes over time in the control group.
+
+# By repeating this process 1000 times, the bootstrapping method allows us to understand the variability
+# of the DiD estimate and assess its reliability. This is crucial for causal inference studies where understanding
+# the treatment effect's consistency and robustness against different samples is important.
+
+boot_result_did <- boot(data = pred_df, statistic = bootstrap_did, R = 1000)
+
+# Calculate 95% CI
+conf_int_did <- boot.ci(boot_result_did, conf = 0.95, type = "perc")
+
+
+# plot_did_distribution(pred_df, boot_result_did, conf_int_did,
+#                       x=-2, y=0.6,
+#                       subtitle = "ZINBM - Binge Drinking Days")
+
+
+
+# final_results <- final_results |> 
+#   bind_rows(get_values_boot(boot_result_intervention, conf_int_intervention, 
+#                             boot_result_usual, conf_int_usual, 
+#                             boot_result_did, conf_int_did,
+#                             pred_df, variable = "Binge Drinking Days - Comp Cases"))
+binge_results <- final_results |> 
+  filter(variable == "Binge Drinking Days - Comp Cases")
+
+
+data_drinking |> 
+  select(period, treat) |> 
+  bind_cols(pred = zinbm_binge.days |> 
+              predict(newdata = data_drinking, 
+                      type = "response")) |> 
+  group_by(period, treat) |>
+  summarize(mean = mean(pred)) |> 
+  mutate(across(where(is.numeric), ~ round(.x, 1)))
+
+
+```
+
+```{r}
+#| label: tbl-binge
+#| tbl-cap: "Difference-in-Differences (DiD) Analysis for Binge Drinking Days"
+binge_table <- binge_results %>% 
+  mutate(p = c(0,0, stats_binge.days[stats_binge.days$contrast == "Xaltperiod3mo:treatIntervention",'Pr(>|z|)']),
+         `Mean Difference` = glue("{diff} ({ci_low}, {ci_high})")) %>% 
+  mutate(p = round(p, 4),
+         p = ifelse(p == 0, "-", p)) %>% 
+  select(Comparison = group, `Mean Difference`, p) %>% 
+  gt() %>% 
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = cells_column_labels()
+  ) 
+binge_table
+```
+
+```{r}
+#| label: fig-binge
+#| fig-cap: "Difference-in-Differences (DiD) Analysis for Binge Drinking Days"
+
+wrap_plots(plot_bootstrap_results_combined(boot_result_intervention, conf_int_intervention, 
+                                           boot_result_usual, conf_int_usual,
+                                           pred_df),
+           plot_did_distribution(pred_df, boot_result_did, conf_int_did,
+                                 x=-2, y=0.6,
+                                 subtitle = "ZINBM - Binge Drinking Days"))
+```
+
+
+#### Removing outliers
+
+Here I test the effect of removing outliers in the model output. The outliers are identified as those patients with binge drinking days above the upper whisker of the boxplot.
+
+```{r}
+data_drinking <-  data_subset %>% 
+  filter(!practid %in% remove_ids_binge) %>% 
+  # forcing variables to be integers
+  mutate(binge.days = as.integer(binge.days),
+         drinking.days = as.integer(drinking.days),
+         drinking.amount = as.integer(drinking.amount))
+
+outlier_range <- data_drinking %>%
+  filter(binge.days != 0) %>%
+  summarize(Q1 = quantile(binge.days, 0.25, na.rm = TRUE),
+            Q3 = quantile(binge.days, 0.75, na.rm = TRUE),
+            IQR = IQR(binge.days, na.rm = TRUE),
+            min_val = min(binge.days, na.rm = TRUE),
+            max_val = max(binge.days, na.rm = TRUE)) %>%
+  mutate(lower_whisker = max(min_val, Q1 - 1.5 * IQR),
+         upper_whisker = min(max_val, Q3 + 1.5 * IQR)) |> 
+  pull(upper_whisker)
+
+outlier_whisker_patients <- data_drinking |> 
+  filter(binge.days > outlier_range) |> 
+  pull(practid)
+
+data_drinking <- data_drinking |> 
+  filter(!practid %in% outlier_whisker_patients)
+
+X <- model.matrix(~period * treat, data = data_drinking)
+Xalt <- X[, c("period3mo", "period3mo:treatIntervention")]
+
+
+zinbm_binge.days <- glmmTMB(binge.days ~  Xalt + (1|practid), 
+                            zi = ~ treat, 
+                            family = nbinom2, 
+                            data = data_drinking)
+
+stats_binge.days <- summary(zinbm_binge.days)
+stats_binge.days <- as.data.frame(stats_binge.days$coefficients$cond)
+stats_binge.days <- tibble::rownames_to_column(stats_binge.days, "contrast") %>% 
+  select(-`z value`) %>% 
+  mutate(var = "binge.days")
+
+# Calculate confidence intervals
+ci_binge.days <- tibble::rownames_to_column(as.data.frame(confint(zinbm_binge.days)), "contrast") %>% 
+  mutate_if(is.numeric, exp) %>% 
+  mutate(contrast = dplyr::recode(contrast, "cond.Xaltperiod3mo" = "Xaltperiod3mo",
+                                  "cond.Xaltperiod3mo:treatIntervention" = "Xaltperiod3mo:treatIntervention"))
+# Merge the statistics with confidence intervals
+stats_binge.days <- stats_binge.days %>% 
+  left_join(ci_binge.days %>% select(-Estimate), by=join_by(contrast==contrast))
+
+
+#### Bootstrapping --------------------------------------------
+
+##### Differences in 3 Months - Intervention -----------------------------------
+
+pred_df <- data_drinking %>% 
+  select(practid, period, treat)
+
+pred_df <- cbind(pred_df, 
+                 pred = predict(zinbm_binge.days, data_drinking, type="response"))
+
+# Bootstrapping the difference for Intervention group _______
+boot_data_intervention <- pred_df %>%
+  filter(treat == "Intervention")
+
+boot_result_intervention <- boot(data = boot_data_intervention,
+                                 statistic = mean_diff_time_func,
+                                 R = 1000)
+
+# 95% Confidence Interval for the Intervention group
+conf_int_intervention <- boot.ci(boot_result_intervention, conf = 0.95, type = "perc")
+
+##### Differences in 3 Months - Usual care -----------------------------------
+boot_data_usual <- pred_df %>%
+  filter(treat == "Usual care")
+
+boot_result_usual <- boot(data = boot_data_usual,
+                          statistic = mean_diff_time_func,
+                          R = 1000)
+
+# 95% Confidence Interval for the Usual care group
+conf_int_usual <- boot.ci(boot_result_usual, conf = 0.95, type = "perc")
+
+##### Difference in Differences -----------------------------------------------
+
+# Run the bootstrap
+set.seed(12345)
+
+boot_result_did <- boot(data = pred_df, statistic = bootstrap_did, R = 1000)
+
+# Calculate 95% CI
+conf_int_did <- boot.ci(boot_result_did, conf = 0.95, type = "perc")
+
+# final_results <- final_results |> 
+#   bind_rows(get_values_boot(boot_result_intervention, conf_int_intervention, 
+#                             boot_result_usual, conf_int_usual, 
+#                             boot_result_did, conf_int_did,
+#                             pred_df, variable = "Binge Drinking Days - Comp Cases, Removed Whisker"))
+
+comp_cases_no_outlier <- get_values_boot(boot_result_intervention, conf_int_intervention, 
+                                         boot_result_usual, conf_int_usual,
+                                         boot_result_did, conf_int_did,
+                                         pred_df, variable = "Binge Drinking Days - Comp Cases, Removed Whisker")
+
+comp_cases_table <- comp_cases_no_outlier |> 
+  mutate(across(where(is.numeric), ~ round(.x, 2))) |>
+  mutate(annotation = paste0(diff, " (", ci_low, ", ", ci_high, ")")) |> 
+  pivot_wider(id_cols=group, 
+              names_from = variable, 
+              values_from = annotation)  
+
+pred_means_comp_no_outlier <- data_drinking |> 
+  select(period, treat) |> 
+  bind_cols(pred = zinbm_binge.days |> 
+              predict(newdata = data_drinking, 
+                      type = "response")) |> 
+  group_by(period, treat) |>
+  summarize(mean = mean(pred)) |> 
+  mutate(across(where(is.numeric), ~ round(.x, 1)))
+
+comp_cases_table_final <- comp_cases_table |> 
+  left_join(pred_means_comp_no_outlier |> 
+              mutate(treat = as.character(treat),
+                     treat = ifelse(treat == "Usual care", "Usual Care", treat)),
+            by = join_by(group == treat)) |> 
+  # select(-variable) |> 
+  pivot_wider(id_cols=c(group, `Binge Drinking Days - Comp Cases, Removed Whisker`), 
+              names_from = period, values_from = mean)
+
+comp_cases_table_final |> 
+  write_csv(file.path(proj, "3months", "PLOS_Medicine_July2025", "tables",
+                      "table_binge_complete_case_whisker.csv"))
+```
+
+### Drinking Days
+
+
+```{r}
+
+drinking.days_nbm <- glmmTMB(drinking.days ~  Xalt + (1|practid), 
+                             family = nbinom2, 
+                             data = data_drinking)
+
+stats_drinking.days <- summary(drinking.days_nbm)
+stats_drinking.days <- as.data.frame(stats_drinking.days$coefficients$cond)
+stats_drinking.days <- tibble::rownames_to_column(stats_drinking.days, "contrast") %>% 
+  select(-`z value`) %>% 
+  mutate(var = "drinking.days")
+
+# Calculate confidence intervals
+ci <- tibble::rownames_to_column(as.data.frame(confint(drinking.days_nbm)), "contrast") %>% 
+  mutate_if(is.numeric, exp) %>% 
+  mutate(contrast = dplyr::recode(contrast, "cond.Xaltperiod3mo" = "Xaltperiod3mo",
+                                  "cond.Xaltperiod3mo:treatIntervention" = "Xaltperiod3mo:treatIntervention"))
+# Merge the statistics with confidence intervals
+stats_drinking.days <- stats_drinking.days %>% 
+  left_join(ci %>% select(-Estimate), by=join_by(contrast==contrast))
+
+#### Bootstrapping --------------------------------------------
+
+##### Differences in 3 Months - Intervention -----------------------------------
+
+pred_df <- data_drinking %>% 
+  select(practid, period, treat)
+
+pred_df <- cbind(pred_df, 
+                 pred = predict(drinking.days_nbm, data_drinking, type="response"))
+
+means_nbm <- pred_df %>% 
+  group_by(period, treat) %>% 
+  summarise(mean=mean(pred))
+
+# Bootstrapping the difference for Intervention group _______
+boot_data_intervention <- pred_df %>%
+  filter(treat == "Intervention")
+
+boot_result_intervention <- boot(data = boot_data_intervention,
+                                 statistic = mean_diff_time_func,
+                                 R = 1000)
+
+# 95% Confidence Interval for the Intervention group
+conf_int_intervention <- boot.ci(boot_result_intervention, conf = 0.95, type = "perc")
+
+##### Differences in 3 Months - Usual care -----------------------------------
+boot_data_usual <- pred_df %>%
+  filter(treat == "Usual care")
+
+boot_result_usual <- boot(data = boot_data_usual,
+                          statistic = mean_diff_time_func,
+                          R = 1000)
+
+# 95% Confidence Interval for the Usual care group
+conf_int_usual <- boot.ci(boot_result_usual, conf = 0.95, type = "perc")
+
+##### Difference in Differences -----------------------------------------------
+
+# Run the bootstrap
+set.seed(12345)
+boot_result_did <- boot(data = pred_df, statistic = bootstrap_did, R = 1000)
+
+# Calculate 95% CI
+conf_int_did <- boot.ci(boot_result_did, conf = 0.95, type = "perc")
+
+drink_results <-  get_values_boot(boot_result_intervention, conf_int_intervention, 
+                                  boot_result_usual, conf_int_usual, 
+                                  boot_result_did, conf_int_did,
+                                  pred_df, variable = "Drinking Days - Comp Cases")
+
+# final_results <- rbind(final_results, drink_results) 
+
+```
+
+```{r}
+#| label: tbl-drink
+#| tbl-cap: "Difference-in-Differences (DiD) Analysis for Drinking Days"
+drink_results %>% 
+  mutate(p = c(0,0, stats_drinking.days[stats_drinking.days$contrast == "Xaltperiod3mo:treatIntervention",'Pr(>|z|)']),
+         `Mean Difference` = glue("{diff} ({ci_low}, {ci_high})")) %>% 
+  mutate(p = round(p, 4),
+         p = ifelse(p == 0, "-", p)) %>% 
+  select(Comparison = group, `Mean Difference`, p) %>% 
+  gt() %>% 
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = cells_column_labels()
+  )
+```
+
+```{r}
+#| label: fig-drinking
+#| fig-cap: "Difference-in-Differences (DiD) Analysis for Drinking Days"
+wrap_plots(plot_bootstrap_results_combined(boot_result_intervention, conf_int_intervention, 
+                                           boot_result_usual, conf_int_usual,
+                                           pred_df),
+           plot_did_distribution(pred_df, boot_result_did, conf_int_did,
+                                 x=-2, y=0.6,
+                                 subtitle = "NBM - Drinking Days"))
+```
+
+### Drinking Amount
+
+```{r}
+drinking.amount_nbm <- glmmTMB(drinking.amount ~  Xalt + (1|practid), 
+                               family = nbinom2, 
+                               data = data_drinking)
+
+stats_drinking.amount <- summary(drinking.amount_nbm)
+stats_drinking.amount <- as.data.frame(stats_drinking.amount$coefficients$cond)
+stats_drinking.amount <- tibble::rownames_to_column(stats_drinking.amount, "contrast") %>% 
+  select(-`z value`) %>% 
+  mutate(var = "binge.days")
+
+# Calculate confidence intervals
+ci <- tibble::rownames_to_column(as.data.frame(confint(drinking.amount_nbm)), "contrast") %>% 
+  mutate_if(is.numeric, exp) %>% 
+  mutate(contrast = dplyr::recode(contrast, "cond.Xaltperiod3mo" = "Xaltperiod3mo",
+                                  "cond.Xaltperiod3mo:treatIntervention" = "Xaltperiod3mo:treatIntervention"))
+# Merge the statistics with confidence intervals
+stats_drinking.amount <- stats_drinking.amount %>% 
+  left_join(ci %>% select(-Estimate), by=join_by(contrast==contrast))
+
+#### Bootstrapping --------------------------------------------
+
+##### Differences in 3 Months - Intervention -----------------------------------
+
+pred_df <- data_drinking %>% 
+  select(practid, period, treat)
+
+pred_df <- cbind(pred_df, 
+                 pred = predict(drinking.amount_nbm, data_drinking, type="response"))
+
+means_nbm <- pred_df %>% 
+  group_by(period, treat) %>% 
+  summarise(mean=mean(pred))
+
+# Bootstrapping the difference for Intervention group _______
+boot_data_intervention <- pred_df %>%
+  filter(treat == "Intervention")
+
+boot_result_intervention <- boot(data = boot_data_intervention,
+                                 statistic = mean_diff_time_func,
+                                 R = 1000)
+
+# 95% Confidence Interval for the Intervention group
+conf_int_intervention <- boot.ci(boot_result_intervention, conf = 0.95, type = "perc")
+
+##### Differences in 3 Months - Usual care -----------------------------------
+boot_data_usual <- pred_df %>%
+  filter(treat == "Usual care")
+
+boot_result_usual <- boot(data = boot_data_usual,
+                          statistic = mean_diff_time_func,
+                          R = 1000)
+
+# 95% Confidence Interval for the Usual care group
+conf_int_usual <- boot.ci(boot_result_usual, conf = 0.95, type = "perc")
+
+
+
+##### Difference in Differences -----------------------------------------------
+
+# Run the bootstrap
+set.seed(12345)
+boot_result_did <- boot(data = pred_df, statistic = bootstrap_did, R = 1000)
+
+# Calculate 95% CI
+conf_int_did <- boot.ci(boot_result_did, conf = 0.95, type = "perc")
+
+# drinking_amount_results <- get_values_boot(boot_result_intervention, conf_int_intervention, 
+#                                            boot_result_usual, conf_int_usual, 
+#                                            boot_result_did, conf_int_did,
+#                                            pred_df, variable = "Drinking Amount - Comp Cases")
+
+
+# final_results <- rbind(final_results, drinking_amount_results) 
+```
+
+```{r}
+#| fig-cap: "Difference-in-Differences (DiD) Analysis for Drinking Amount"
+#| label: tbl-drinking-amount
+drinking_amount_results %>% 
+  mutate(p = c(0,0, stats_drinking.amount[stats_drinking.amount$contrast == "Xaltperiod3mo:treatIntervention",'Pr(>|z|)']),
+         `Mean Difference` = glue("{diff} ({ci_low}, {ci_high})")) %>% 
+  mutate(p = round(p, 4),
+         p = ifelse(p == 0, "-", p)) %>% 
+  select(Comparison = group, `Mean Difference`, p) %>% 
+  gt() %>% 
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = cells_column_labels()
+  )
+```
+
+```{r}
+#| label: fig-drinking-amount
+#| fig-cap: "Difference-in-Differences (DiD) Analysis for Drinking Amount"
+wrap_plots(plot_bootstrap_results_combined(boot_result_intervention, conf_int_intervention, 
+                                           boot_result_usual, conf_int_usual,
+                                           pred_df),
+           plot_did_distribution(pred_df, boot_result_did, conf_int_did,
+                                 x=-10, y=0.05,
+                                 subtitle = "NBM - Drinking Amount")
+)
+```
+
+### DrInC
+
+
+```{r}
+#| message: false
+data_drinc <- data_subset %>% 
+  filter(!practid %in% remove_ids_drinc)
+
+X <- model.matrix(~period * treat, data = data_drinc)
+Xalt <- X[, c("period3mo", "period3mo:treatIntervention")]
+
+drinc_lmer <- lmerTest::lmer(drinc_sum ~ Xalt + (1 | practid), 
+                             data = data_drinc)
+
+stats_drinc <- summary(drinc_lmer)
+stats_drinc <- as.data.frame(stats_drinc$coefficients)
+stats_drinc <- tibble::rownames_to_column(stats_drinc, "contrast") %>% 
+  select(-`t value`) %>% 
+  mutate(var = "drinc")
+
+# Calculate confidence intervals
+ci_drinc <- tibble::rownames_to_column(as.data.frame(confint(drinc_lmer)), "contrast") %>% 
+  mutate(contrast = dplyr::recode(contrast, "cond.Xaltperiod3mo" = "Xaltperiod3mo",
+                                  "cond.Xaltperiod3mo:treatIntervention" = "Xaltperiod3mo:treatIntervention"))
+# Merge the statistics with confidence intervals
+stats_drinc <- stats_drinc %>% 
+  left_join(ci_drinc, by=join_by(contrast==contrast))
+#### Bootstrapping --------------------------------------------
+
+pred_df <- data_drinc %>% 
+  select(practid, period, treat)
+
+pred_df <- cbind(pred_df, pred = predict(drinc_lmer, newdata=data_drinc,
+                                         allow.new.levels=T))
+##### Differences in 3 Months - Intervention -----------------------------------
+
+# Bootstrapping the difference for Intervention group _______
+boot_data_intervention <- pred_df %>%
+  filter(treat == "Intervention")
+
+boot_result_intervention <- boot(data = boot_data_intervention,
+                                 statistic = mean_diff_time_func,
+                                 R = 1000)
+
+# 95% Confidence Interval for the Intervention group
+conf_int_intervention <- boot.ci(boot_result_intervention, conf = 0.95, type = "perc")
+
+##### Differences in 3 Months - Usual care -----------------------------------
+boot_data_usual <- pred_df %>%
+  filter(treat == "Usual care")
+
+boot_result_usual <- boot(data = boot_data_usual,
+                          statistic = mean_diff_time_func,
+                          R = 1000)
+
+# 95% Confidence Interval for the Usual care group
+conf_int_usual <- boot.ci(boot_result_usual, conf = 0.95, type = "perc")
+
+
+##### Difference in Differences -----------------------------------------------
+
+# Run the bootstrap
+set.seed(12345)
+boot_result_did <- boot(data = pred_df, statistic = bootstrap_did, R = 1000)
+
+# Calculate 95% CI
+conf_int_did <- boot.ci(boot_result_did, conf = 0.95, type = "perc")
+
+drinc_results <- get_values_boot(boot_result_intervention, conf_int_intervention, 
+                                 boot_result_usual, conf_int_usual, 
+                                 boot_result_did, conf_int_did,
+                                 pred_df, variable = "DrInC - Comp Cases")
+
+# final_results <- rbind(final_results, drinc_results) 
+```
+
+```{r}
+#| label: tbl-drinc
+#| tbl-cap: "Difference-in-Differences (DiD) Analysis for DrInC"
+drinc_results %>% 
+  mutate(p = c(0,0, stats_drinc[stats_drinc$contrast == "Xaltperiod3mo:treatIntervention",'Pr(>|t|)']),
+         `Mean Difference` = glue("{diff} ({ci_low}, {ci_high})")) %>% 
+  mutate(p = round(p, 4),
+         p = ifelse(p == 0, "-", p)) %>% 
+  select(Comparison = group, `Mean Difference`, p) %>% 
+  gt() %>% 
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = cells_column_labels()
+  )
+```
+
+```{r}
+#| label: fig-drinc
+#| fig-cap: "Difference-in-Differences (DiD) Analysis for DrInC"
+wrap_plots(plot_bootstrap_results_combined(boot_result_intervention, conf_int_intervention, 
+                                           boot_result_usual, conf_int_usual,
+                                           pred_df, x= -13, y=0.5, 
+                                           subtitle="DrInC"),
+           
+           plot_did_distribution(pred_df, boot_result_did, conf_int_did,
+                                 x=-2, y=0.6,
+                                 subtitle = "LMER - DrInC")
+)
+```
+
+### AUDIT
+
+```{r}
+#| message: false
+data_audit <- data_subset %>% 
+  filter(!practid %in% remove_ids_audit)
+
+X <- model.matrix(~period * treat, data = data_audit)
+Xalt <- X[, c("period3mo", "period3mo:treatIntervention")]
+
+audit_lmer <- lmerTest::lmer(audit_sum ~ Xalt + (1 | practid), 
+                             data = data_audit)
+
+stats_audit <- summary(audit_lmer)
+stats_audit <- as.data.frame(stats_audit$coefficients)
+stats_audit <- tibble::rownames_to_column(stats_audit, "contrast") %>% 
+  select(-`t value`) %>% 
+  mutate(var = "drinc")
+
+# Calculate confidence intervals
+ci_audit <- tibble::rownames_to_column(as.data.frame(confint(audit_lmer)), "contrast") %>% 
+  mutate(contrast = dplyr::recode(contrast, "cond.Xaltperiod3mo" = "Xaltperiod3mo",
+                                  "cond.Xaltperiod3mo:treatIntervention" = "Xaltperiod3mo:treatIntervention"))
+# Merge the statistics with confidence intervals
+stats_audit <- stats_audit %>% 
+  left_join(ci_audit, by=join_by(contrast==contrast))
+#### Bootstrapping --------------------------------------------
+pred_df <- data_audit %>% 
+  select(practid, period, treat)
+
+
+pred_df <- cbind(pred_df, pred = predict(audit_lmer, newdata=data_audit,
+                                         allow.new.levels=T))
+
+##### Differences in 3 Months - Intervention -----------------------------------
+
+
+# Bootstrapping the difference for Intervention group _______
+boot_data_intervention <- pred_df %>%
+  filter(treat == "Intervention")
+
+boot_result_intervention <- boot(data = boot_data_intervention,
+                                 statistic = mean_diff_time_func,
+                                 R = 1000)
+
+# 95% Confidence Interval for the Intervention group
+conf_int_intervention <- boot.ci(boot_result_intervention, conf = 0.95, type = "perc")
+
+##### Differences in 3 Months - Usual care -----------------------------------
+boot_data_usual <- pred_df %>%
+  filter(treat == "Usual care")
+
+boot_result_usual <- boot(data = boot_data_usual,
+                          statistic = mean_diff_time_func,
+                          R = 1000)
+
+# 95% Confidence Interval for the Usual care group
+conf_int_usual <- boot.ci(boot_result_usual, conf = 0.95, type = "perc")
+
+
+##### Difference in Differences -----------------------------------------------
+
+# Run the bootstrap
+set.seed(12345)
+boot_result_did <- boot(data = pred_df, statistic = bootstrap_did, R = 1000)
+
+# Calculate 95% CI
+conf_int_did <- boot.ci(boot_result_did, conf = 0.95, type = "perc")
+
+audit_results <- get_values_boot(boot_result_intervention, conf_int_intervention, 
+                                 boot_result_usual, conf_int_usual, 
+                                 boot_result_did, conf_int_did,
+                                 pred_df, variable = "AUDIT - Comp Cases")
+
+# final_results <- rbind(final_results, audit_results) 
+```
+
+```{r}
+#| label: tbl-audit
+#| tbl-cap: "Difference-in-Differences (DiD) Analysis for AUDIT"
+audit_results %>% 
+  mutate(p = c(0,0, stats_audit[stats_audit$contrast == "Xaltperiod3mo:treatIntervention",'Pr(>|t|)']),
+         `Mean Difference` = glue("{diff} ({ci_low}, {ci_high})")) %>% 
+  mutate(p = round(p, 4),
+         p = ifelse(p == 0, "-", p)) %>% 
+  select(Comparison = group, `Mean Difference`, p) %>% 
+  gt() %>% 
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = cells_column_labels()
+  )
+```
+
+```{r}
+#| label: fig-audit
+#| fig-cap: "Difference-in-Differences (DiD) Analysis for AUDIT"
+wrap_plots(plot_bootstrap_results_combined(boot_result_intervention, conf_int_intervention, 
+                                           boot_result_usual, conf_int_usual,
+                                           pred_df, x=-10, y=0.5, bins = 30,
+                                           subtitle = "AUDIT"),
+           plot_did_distribution(pred_df, boot_result_did, conf_int_did,
+                                 x=-2, y=0.6,
+                                 subtitle = "LMER - AUDIT")
+)
+```
+
+### PHQ-9
+
+```{r}
+#| message: false
+data_phq <- data_subset %>% 
+  filter(!practid %in% remove_ids_phq)
+
+X <- model.matrix(~period * treat, data = data_phq)
+Xalt <- X[, c("period3mo", "period3mo:treatIntervention")]
+
+phq_lmer <- lmerTest::lmer(phq_sum ~ Xalt + (1 | practid), 
+                           data = data_phq)
+
+stats_phq <- summary(phq_lmer)
+stats_phq <- as.data.frame(stats_phq$coefficients)
+stats_phq <- tibble::rownames_to_column(stats_phq, "contrast") %>% 
+  select(-`t value`) %>% 
+  mutate(var = "drinc")
+
+# Calculate confidence intervals
+ci_phq <- tibble::rownames_to_column(as.data.frame(confint(phq_lmer)), "contrast") %>% 
+  mutate(contrast = dplyr::recode(contrast, "cond.Xaltperiod3mo" = "Xaltperiod3mo",
+                                  "cond.Xaltperiod3mo:treatIntervention" = "Xaltperiod3mo:treatIntervention"))
+# Merge the statistics with confidence intervals
+stats_phq <- stats_phq %>% 
+  left_join(ci_phq, by=join_by(contrast==contrast))
+
+#### Bootstrapping --------------------------------------------
+pred_df <- data_phq %>% 
+  select(practid, period, treat)
+
+pred_df <- cbind(pred_df, pred = predict(phq_lmer, newdata=data_phq,
+                                         allow.new.levels=T))
+##### Differences in 3 Months - Intervention -----------------------------------
+
+
+# Bootstrapping the difference for Intervention group _______
+boot_data_intervention <- pred_df %>%
+  filter(treat == "Intervention")
+
+boot_result_intervention <- boot(data = boot_data_intervention,
+                                 statistic = mean_diff_time_func,
+                                 R = 1000)
+
+# 95% Confidence Interval for the Intervention group
+conf_int_intervention <- boot.ci(boot_result_intervention, conf = 0.95, type = "perc")
+
+##### Differences in 3 Months - Usual care -----------------------------------
+boot_data_usual <- pred_df %>%
+  filter(treat == "Usual care")
+
+boot_result_usual <- boot(data = boot_data_usual,
+                          statistic = mean_diff_time_func,
+                          R = 1000)
+
+# 95% Confidence Interval for the Usual care group
+conf_int_usual <- boot.ci(boot_result_usual, conf = 0.95, type = "perc")
+
+
+
+
+##### Difference in Differences -----------------------------------------------
+
+# Run the bootstrap
+set.seed(12345)
+boot_result_did <- boot(data = pred_df, statistic = bootstrap_did, R = 1000)
+
+# Calculate 95% CI
+conf_int_did <- boot.ci(boot_result_did, conf = 0.95, type = "perc")
+
+phq9_results <- get_values_boot(boot_result_intervention, conf_int_intervention, 
+                                boot_result_usual, conf_int_usual, 
+                                boot_result_did, conf_int_did,
+                                pred_df, variable = "PHQ9 - Comp Cases")
+
+# final_results <- rbind(final_results, phq9_results) 
+```
+
+```{r}
+phq9_results %>% 
+  mutate(p = c(0,0, stats_phq[stats_phq$contrast == "Xaltperiod3mo:treatIntervention",'Pr(>|t|)']),
+         `Mean Difference` = glue("{diff} ({ci_low}, {ci_high})")) %>% 
+  mutate(p = round(p, 4),
+         p = ifelse(p == 0, "-", p)) %>% 
+  select(Comparison = group, `Mean Difference`, p) %>% 
+  gt() %>% 
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = cells_column_labels()
+  )
+```
+
+```{r}
+#| label: fig-phq
+#| fig-cap: "Difference-in-Differences (DiD) Analysis for PHQ-9"
+wrap_plots(plot_bootstrap_results_combined(boot_result_intervention, conf_int_intervention, 
+                                           boot_result_usual, conf_int_usual,
+                                           pred_df, x=0, y=1,
+                                           subtitle = "PHQ9"),
+           plot_did_distribution(pred_df, boot_result_did, conf_int_did,
+                                 x=-2, y=0.6,
+                                 subtitle = "LMER - PHQ9")
+           
+)
+```
+
+## Primary Outcome
+
+Sensitivity analysis focusing on the primary outcome of binge drinking days.
+
+### Excluding outliers based on boxplot for patients !=0 binge
+
+Removing extreme outliers based on the upper whisker of the boxplot for binge drinking days, which is defined as 1.5 times the interquartile range (IQR) above the third quartile (Q3).
+
+```{r}
+data_sens_base <- data_sens %>% 
+  select(matches("drink_q_") & !matches("3mo|6mo|9mo|12mo|24mo"),
+         age, tribe_recoded, employ,
+         marital, live, insurance, female,
+         income_self, income_house,
+         education, binge.days = binge.days_base,
+         practid, treat = arm_stage1) %>% 
+  mutate(female = as.character(female),
+         period = "base") 
+
+data_sens_3mo <- data_sens %>% 
+  select(matches("drink_q_") & matches("3mo"),
+         age, tribe_recoded, employ,
+         marital, live, insurance, female,
+         income_self, income_house,
+         education, 
+         binge.days = binge.days_3mo,
+         practid, treat = arm_stage1) %>% 
+  # remove _3mo
+  rename_with(~ str_remove(., "_3mo$")) %>% 
+  mutate(female = as.character(female),
+         period = "3mo") 
+
+outlier_range <- data_sens_base %>%
+  filter(binge.days != 0) %>%
+  summarize(Q1 = quantile(binge.days, 0.25, na.rm = TRUE),
+            Q3 = quantile(binge.days, 0.75, na.rm = TRUE),
+            IQR = IQR(binge.days, na.rm = TRUE),
+            min_val = min(binge.days, na.rm = TRUE),
+            max_val = max(binge.days, na.rm = TRUE)) %>%
+  mutate(lower_whisker = max(min_val, Q1 - 1.5 * IQR),
+         upper_whisker = min(max_val, Q3 + 1.5 * IQR)) |> 
+  pull(upper_whisker)
+
+outlier_whisker_patients <- data_sens_base |> 
+  filter(binge.days > outlier_range) |> 
+  pull(practid )
+```
+
+
+```{r}
+data_sens_imp <- data_sens_base %>% 
+  bind_rows(data_sens_3mo) |> 
+  filter(!practid %in% outlier_whisker_patients)
+
+predMatrix <- make.predictorMatrix(data_sens_imp)
+
+predMatrix[, c("practid", "treat", "period")] <- 0  # Prevent vars from being used as a predictor
+predMatrix[c("practid", "treat", "period"), ] <- -2  # Prevent vars from being imputed
+
+
+# imp_binge_whisker <- mice(data_sens_imp, m=100, maxit=50, seed=54123,
+#                           method="pmm", predictorMatrix = predMatrix,
+#                           n.burn=100)
+# saveRDS(imp_binge_whisker, file = file.path(proj, "3months", "PLOS_Medicine_July2025",
+#                                             "data", "data_sens_binge_removed_whisker_imputed.RDS"))
+# Loading the imputed dataset
+imp_binge_whisker <- readRDS(file.path(proj, "3months", "PLOS_Medicine_July2025",
+                                       "data", "data_sens_binge_removed_whisker_imputed.RDS"))
+
+```
+
+```{r}
+imp_binge_whisker <- imp_binge_whisker |> 
+  complete(action="long", include=T) |> 
+  mutate(period = factor(period, levels = c("base", "3mo")),
+         treat = factor(treat, levels = c("Usual care", "Intervention"))) |> 
+  as.mids()
+```
+
+##### Mean Predicted Change
+
+```{r}
+# Commented code to avoid re-running the bootstrap process
+# Initialize lists
+# boot_results_intervention <- list()
+# boot_results_usual <- list()
+# boot_results_did <- list()
+# 
+# # Loop over each of the 10 imputed datasets
+# for (i in 1:100) {
+#   # Get the i-th complete dataset
+#   data_i <- complete(imp_binge_whisker, i) %>%
+#     select(binge.days, treat, period, practid)
+#   
+#   # Ensure proper factor levels
+#   data_i$period <- factor(data_i$period, levels = c("base", "3mo"))
+#   data_i$treat <- factor(data_i$treat, levels = c("Usual care", "Intervention"))
+#   
+#   # Model matrix
+#   Xalt <- model.matrix(~ period * treat, data = data_i)
+#   Xalt <- Xalt[, c("period3mo", "period3mo:treatIntervention")]
+#   
+#   # Fit model
+#   model_i <- glmmTMB(binge.days ~ Xalt + (1 | practid),
+#                      zi = ~ treat,
+#                      family = nbinom2,
+#                      data = data_i
+#   )
+#   
+#   # Predict expected values
+#   data_i$pred <- predict(model_i, newdata = data_i, type = "response")
+#   
+#   # Group-specific bootstraps
+#   boot_data_intervention <- data_i %>% filter(treat == "Intervention")
+#   boot_data_usual <- data_i %>% filter(treat == "Usual care")
+#   
+#   boot_interv <- boot(data = boot_data_intervention,
+#                       statistic = mean_diff_time_func,
+#                       R = 1000)
+#   boot_usual <- boot(data = boot_data_usual,
+#                      statistic = mean_diff_time_func,
+#                      R = 1000)
+#   
+#   # DID bootstrap on full predicted dataset
+#   boot_did <- boot(data = data_i, statistic = bootstrap_did, R = 1000)
+#   
+#   # Store bootstrap replicates
+#   boot_results_intervention[[i]] <- boot_interv$t
+#   boot_results_usual[[i]] <- boot_usual$t
+#   boot_results_did[[i]] <- boot_did$t
+# }
+# 
+# # Combine all bootstrap samples across imputations
+# all_interv <- unlist(boot_results_intervention)
+# all_usual <- unlist(boot_results_usual)
+# all_did <- unlist(boot_results_did)
+# 
+# # Final summary table
+# final_results <- final_results |> 
+#   bind_rows(tibble(group = c("Intervention", "Usual Care", "DiD"),
+#                    diff = c(mean(all_interv), mean(all_usual), mean(all_did)),
+#                    ci_low = c(quantile(all_interv, 0.025),
+#                               quantile(all_usual, 0.025),
+#                               quantile(all_did, 0.025)),
+#                    ci_high = c(quantile(all_interv, 0.975),
+#                                quantile(all_usual, 0.975),
+#                                quantile(all_did, 0.975)),
+#                    variable = "Binge Drinking Days - Imputed, Removed Whisker"))
+
+```
+
+```{r}
+#| label: tbl-binge-mice-boot
+#| tbl-cap: "Within and across group differences and DiD in the predicted mean Binge Drinking Days in the inputed model by removing patients outside of the boxplot whisker range"
+final_results %>% 
+  filter(variable == "Binge Drinking Days - Imputed, Removed Whisker") %>% 
+  mutate(across(where(is.numeric), ~ round(.x, 2))) %>% 
+  gt()
+```
+
+### Comparing the imputation approaches
+```{r}
+final_results |> 
+  filter(str_starts(variable, "Binge")) |> 
+  mutate(variable = str_remove(variable, "Binge Drinking Days"),
+         variable = str_remove(variable, " - "),
+         variable = ifelse(variable == "", "Imputed", variable)) |>
+  # round numeric to 2
+  mutate(across(where(is.numeric), ~ round(.x, 2))) |>
+  mutate(annotation = paste0(diff, " (", ci_low, ", ", ci_high, ")")) |> 
+  pivot_wider(id_cols=group, 
+              names_from = variable, 
+              values_from = annotation) |> 
+  gt() |> 
+  # bold column names
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = cells_column_labels()
+  ) 
+```
+
+#### Table for imputation without outliers
+
+```{r}
+
+imputed_whisker_table <- final_results |> 
+  filter(str_starts(variable, "Binge")) |> 
+  mutate(variable = str_remove(variable, "Binge Drinking Days"),
+         variable = str_remove(variable, " - "),
+         variable = ifelse(variable == "", "Imputed", variable)) |>
+  filter(variable == "Imputed, Removed Whisker") |> 
+  # round numeric to 2
+  mutate(across(where(is.numeric), ~ round(.x, 2))) |>
+  mutate(annotation = paste0(diff, " (", ci_low, ", ", ci_high, ")")) |> 
+  pivot_wider(id_cols=group, 
+              names_from = variable, 
+              values_from = annotation)  
+
+
+```
+
+
+```{r}
+data_imp_whisker <- complete(imp_binge_whisker, 1) %>%
+  select(binge.days, treat, period, practid)
+
+# Ensure proper factor levels
+data_imp_whisker$period <- factor(data_imp_whisker$period, levels = c("base", "3mo"))
+data_imp_whisker$treat <- factor(data_imp_whisker$treat, levels = c("Usual care", "Intervention"))
+
+# Model matrix
+Xalt <- model.matrix(~ period * treat, data = data_imp_whisker)
+Xalt <- Xalt[, c("period3mo", "period3mo:treatIntervention")]
+
+# Fit model
+model_imp_whisker <- glmmTMB(binge.days ~ Xalt + (1 | practid),
+                             zi = ~ treat,
+                             family = nbinom2,
+                             data = data_imp_whisker)
+
+pred_means_imp_whisker <- data_imp_whisker |> 
+  select(period, treat) |> 
+  bind_cols(pred = model_imp_whisker |> 
+              predict(newdata = data_imp_whisker, type = "response")) |> 
+  group_by(period, treat) |>
+  summarize(mean = mean(pred)) |> 
+  mutate(across(where(is.numeric), ~ round(.x, 1)))  |> 
+  mutate(variable = "Binge Drinking Days - Outliers Removed") |> 
+  mutate(treat = as.character(treat),
+         treat = ifelse(treat == "Usual care", "Usual Care", treat))
+
+imputed_whisker_table_final <- imputed_whisker_table |> 
+  left_join(pred_means_imp_whisker,
+            by = join_by(group == treat)) |> 
+  select(-variable) |> 
+  pivot_wider(id_cols=c(group, `Imputed, Removed Whisker`), names_from = period, values_from = mean)
+
+imputed_whisker_table_final |> 
+  write_csv(file.path(proj, "3months", "PLOS_Medicine_July2025", "tables",
+                      "table_binge_imputed_whisker.csv"))
+```
+
+
+### P Values and Figures
+
+```{r}
+## Adding p values to the imputed results
+imputed_results <- final_results |> 
+  filter(!str_detect(variable, " - "))
+
+
+pvals <- c(0,0, stats_binge.days_imp[stats_binge.days_imp$contrast == "Xaltperiod3mo:treatIntervention",'Pr(>|z|)'],
+           0,0, stats_drinking.days_imp[stats_drinking.days_imp$contrast == "Xaltperiod3mo:treatIntervention",'Pr(>|z|)'],
+           0,0, stats_drinking.amount_imp[stats_drinking.amount_imp$contrast == "Xaltperiod3mo:treatIntervention",'Pr(>|z|)'],
+           0,0, stats_drinc_imp[stats_drinc_imp$contrast == "Xaltperiod3mo:treatIntervention",'Pr(>|t|)'],
+           0,0, stats_audit_imp[stats_audit_imp$contrast == "Xaltperiod3mo:treatIntervention",'Pr(>|t|)'],
+           0,0, stats_phq_imp[stats_phq_imp$contrast == "Xaltperiod3mo:treatIntervention",'Pr(>|t|)'])
+
+# adding the column with the p values from the models
+imputed_results <- imputed_results %>% 
+  mutate(pval=pvals,
+         combination = paste(variable, group))
+
+## Adding p values to the complete case results
+complete_case_results <- final_results |> 
+  filter(str_detect(variable, "Comp Cases"), !str_detect(variable, "Whisker"))
+
+
+pvals <- c(0,0, stats_binge.days_imp[stats_binge.days_imp$contrast == "Xaltperiod3mo:treatIntervention",'Pr(>|z|)'],
+           0,0, stats_drinking.days_imp[stats_drinking.days_imp$contrast == "Xaltperiod3mo:treatIntervention",'Pr(>|z|)'],
+           0,0, stats_drinking.amount_imp[stats_drinking.amount_imp$contrast == "Xaltperiod3mo:treatIntervention",'Pr(>|z|)'],
+           0,0, stats_drinc_imp[stats_drinc_imp$contrast == "Xaltperiod3mo:treatIntervention",'Pr(>|t|)'],
+           0,0, stats_audit_imp[stats_audit_imp$contrast == "Xaltperiod3mo:treatIntervention",'Pr(>|t|)'],
+           0,0, stats_phq_imp[stats_phq_imp$contrast == "Xaltperiod3mo:treatIntervention",'Pr(>|t|)'])
+
+# adding the column with the p values from the models
+complete_case_results <- complete_case_results %>% 
+  mutate(pval = pvals,
+         combination = paste(variable, group))
+```
+
+#### Table 3. Model results
+
+```{r}
+#| label: tbl-model-results
+#| tbl-cap: "Predicted means and mean predicted difference with respective confidence intervals and p values for secondary study outcomes"
+
+format_pval <- function(pval, digits = 4) {
+  ifelse(
+    is.na(pval), NA_character_,
+    ifelse(pval < 0.001, "< 0.001",
+           paste0(formatC(pval, format = "f", digits = digits)))
+  )
+}
+di <- imputed_results %>% 
+  filter(variable != "Binge Drinking Days", group != "DiD") %>% 
+  mutate(across(where(is.numeric), ~ round(.x, 1))) %>% 
+  mutate(diff = paste0(diff, " (", ci_low, ", ", ci_high, ")")) |>
+  # paste0_if(pval < 0.001, "<0.001") |>
+  select(variable, group, group_diff = diff)  
+
+
+did <- imputed_results %>% 
+  filter(variable != "Binge Drinking Days", group == "DiD") %>% 
+  mutate(pval = format_pval(pval)) |> 
+  mutate(across(where(is.numeric), ~ round(.x, 1))) %>% 
+  mutate(diff = paste0(diff, " (", ci_low, ", ", ci_high, ")")) |>
+  # paste0_if(pval < 0.001, "<0.001") |>
+  select(variable, did = diff, pval)  
+
+did_final <- di |> 
+  left_join(did) 
+
+pivoted_means <- predicted_means_table |> 
+  pivot_wider(id_cols=c(variable, treat), names_from=period, values_from=mean) |> 
+  mutate(treat = as.character(treat)) |> 
+  mutate(group = ifelse(treat == "Usual care", "Usual Care", treat),
+         treat = NULL)
+
+did_final <- did_final |> 
+  left_join(pivoted_means) |> 
+  select(variable, group, base, `3mo`, group_diff, did, pval) 
+ 
+
+
+did_final |> 
+  write_csv(file.path(proj, "3months", "PLOS_Medicine_July2025", "tables",
+                      "table3.csv"))
+```
+
+#### Figure 2
+
+Generating figure 2, which shows the primary outcome results for the imputed data, including the predicted differences and confidence intervals. The output figure is saved as an SVG file, loaded into figma for slight styling adjustments, and then exported as a PNG file for publication.
+
+```{r}
+
+imputed_results_plot <- imputed_results %>% 
+  mutate(pval = format_pval(pval)) |> 
+  mutate(across(where(is.numeric), ~ round(.x, 1))) %>% 
+  mutate(annotation = ifelse(group != "DiD", paste0(diff, " (", ci_low, " ; ", ci_high, ")"),
+                             paste0(diff, " (", ci_low, " ; ", ci_high, ")", " p=", pval, 4))) 
+
+imputed_results_plot %>% 
+  filter(variable == "Binge Drinking Days", group != "DiD") %>% 
+  ggplot(aes(x=group, y=diff)) + 
+  geom_col(position = "dodge") + 
+  geom_errorbar(aes(ymin = ci_low, ymax = ci_high), position="dodge", width=0.2) +
+  theme_Publication() + 
+  labs(x="", y="Change from baseline to 3months") +
+  geom_signif(y_position = c(-5), xmin = c(0.5),
+              xmax = c(2.5),
+              annotation = imputed_results_plot %>%
+                filter(variable == "Binge Drinking Days", group == "DiD") %>%
+                pull(annotation),
+              tip_length = 0) +
+  geom_text(aes(label=annotation, y= -3), size = 4) +
+  theme(plot.caption = element_text(hjust = 0))
+ggsave(file.path(proj, "3months", "PLOS_Medicine_July2025", 
+                 "figures/primary_outcome_results.svg"), width=10, height=12)
+
+```
+
+##### Figure 2 + Data points
+
+Adding the distribution of the predicted differences in binge drinking days for the imputed data, including the boxplot and jittered points to visualize the spread of the data.
+
+###### Imputed data, predicted diff
+```{r}
+data_binge <- complete(imp_all, 1)
+
+X <- model.matrix(~period * treat, data = data_binge)
+Xalt <- X[, c("period3mo", "period3mo:treatIntervention")]
+
+zinbm_binge.days <- glmmTMB(binge.days ~  Xalt + (1|practid), 
+                            zi = ~ treat, 
+                            family = nbinom2, 
+                            data = data_binge)
+
+predicted_box_limit <- data_binge |> 
+  select(practid, period, treat) |>
+  bind_cols(pred = zinbm_binge.days |>
+              predict(newdata = data_binge, type = "response")) |> 
+  pivot_wider(id_cols = c(practid, treat), names_from = c(period), values_from = pred) |> 
+  mutate(diff = `3mo` - base) |> 
+  ggplot(aes(x=treat, y=diff)) +
+  geom_boxplot() +
+  geom_jitter(alpha=.2) +
+  theme_bw() +
+  labs(y="Predicted Change in Binge Drinking Days",
+       subtitle = "Y axis limits -8 to 0") +
+  scale_y_continuous(limits = c(-8, 0)) +
+  theme(axis.title.x=element_blank())
+
+
+ggsave(file.path(proj, "3months", "PLOS_Medicine_July2025", 
+                 "figures/primary_outcome_results_distribution_limits.svg"), width=10, height=12)
+
+predicted_box_no_limit <- data_binge |> 
+  select(practid, period, treat) |>
+  bind_cols(pred = zinbm_binge.days |>
+              predict(newdata = data_binge, type = "response")) |> 
+  pivot_wider(id_cols = c(practid, treat), names_from = c(period), values_from = pred) |> 
+  mutate(diff = `3mo` - base) |> 
+  ggplot(aes(x=treat, y=diff)) +
+  geom_boxplot() +
+  geom_jitter(alpha=.2) +
+  theme_bw() +
+  labs(subtitle = "No limits") +
+  theme(plot.caption = element_text(hjust = 0),
+        axis.title.y = element_blank(),
+        axis.title.x = element_blank())
+
+
+ggsave(file.path(proj, "3months", "PLOS_Medicine_July2025", 
+                 "figures/primary_outcome_results_distribution_no_limits.svg"), width=10, height=12)
+```
+
+###### Imputed data, no outliers - predicted difference
+```{r}
+data_binge <- complete(imp_binge_whisker, 1)
+
+
+X <- model.matrix(~period * treat, data = data_binge)
+Xalt <- X[, c("period3mo", "period3mo:treatIntervention")]
+
+zinbm_binge.days <- glmmTMB(binge.days ~  Xalt + (1|practid), 
+                            zi = ~ treat, 
+                            family = nbinom2, 
+                            data = data_binge)
+
+predicted_box_outlier_limit <- data_binge |> 
+  select(practid, period, treat) |>
+  bind_cols(pred = zinbm_binge.days |>
+              predict(newdata = data_binge, type = "response")) |> 
+  pivot_wider(id_cols = c(practid, treat), names_from = c(period), values_from = pred) |> 
+  mutate(diff = `3mo` - base) |> 
+  ggplot(aes(x=treat, y=diff)) +
+  geom_boxplot() +
+  geom_jitter(alpha=.2) +
+  theme_bw() +
+  labs(y="Predicted Change in Binge Drinking Days",
+       subtitle = "Y axis limits -8 to 0") +
+  theme(plot.caption = element_text(hjust = 0)) +
+  scale_y_continuous(limits = c(-8, 0)) +
+  theme(axis.title.x=element_blank())
+
+
+ggsave(file.path(proj, "3months", "PLOS_Medicine_July2025", 
+                 "figures/primary_outcome_results_distribution_limits_outlier.svg"), width=10, height=12)
+
+predicted_box_outlier_no_limit <- data_binge |> 
+  select(practid, period, treat) |>
+  bind_cols(pred = zinbm_binge.days |>
+              predict(newdata = data_binge, type = "response")) |> 
+  pivot_wider(id_cols = c(practid, treat), names_from = c(period), values_from = pred) |> 
+  mutate(diff = `3mo` - base) |> 
+  ggplot(aes(x=treat, y=diff)) +
+  geom_boxplot() +
+  geom_jitter(alpha=.2) +
+  theme_bw() +
+  labs(subtitle = "No Limits") +
+  theme(plot.caption = element_text(hjust = 0),
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank()) 
+
+
+ggsave(file.path(proj, "3months", "PLOS_Medicine_July2025", 
+                 "figures/primary_outcome_results_distribution_no_limits_outlier.svg"), width=10, height=12)
+
+```
+
+###### Observed data - Imp
+
+```{r}
+data_binge <- complete(imp_all, 1)
+
+observed_box <- data_binge |> 
+  select(practid, period, treat, binge.days) |>
+  pivot_wider(id_cols = c(practid, treat), names_from = period, values_from = binge.days) |> 
+  mutate(diff = `3mo` - base) |> 
+  ggplot(aes(x=treat, y=diff)) +
+  geom_boxplot() +
+  geom_jitter(alpha=.2) +
+  theme_bw() +
+  labs(x="", y="Changes in Binge Drinking Days",
+       subtitle = "All data") 
+
+```
+
+###### Observed data - Imp, no outliers
+```{r}
+data_binge <- complete(imp_binge_whisker, 1)
+
+
+observed_box_no_outliers <- data_binge |> 
+  select(practid, period, treat, binge.days) |>
+  pivot_wider(id_cols = c(practid, treat), names_from = period, values_from = binge.days) |> 
+  mutate(diff = `3mo` - base) |> 
+  ggplot(aes(x=treat, y=diff)) +
+  geom_boxplot() +
+  geom_jitter(alpha=.2) +
+  theme_bw() +
+  labs(x="", subtitle = "Removed Outliers") +
+  theme(axis.title.y = element_blank())
+
+```
+
+##### Combining figure
+```{r}
+
+patchwork <- (observed_box + observed_box_no_outliers ) / (predicted_box_limit + predicted_box_no_limit) /
+  (predicted_box_outlier_limit + predicted_box_outlier_no_limit)
+
+patchwork +
+  plot_annotation(tag_levels = "A")
+
+ggsave(file.path(proj, "3months", "PLOS_Medicine_July2025", 
+                 "figures/figure2_with_distribtuions.svg"),
+       height = 15, width = 10)  
+```
+
+### Wilcoxon Rank Sums
+
+Sensitivity analysis using Wilcoxon rank-sum tests to compare the change in binge drinking days between the intervention and usual care groups, both for complete cases and after removing outliers.
+
+#### Complete cases
+
+```{r}
+data_drinking <-  data_subset %>% 
+  filter(!practid %in% remove_ids_binge) %>% 
+  # forcing variables to be integers
+  mutate(binge.days = as.integer(binge.days),
+         drinking.days = as.integer(drinking.days),
+         drinking.amount = as.integer(drinking.amount))
+
+data_wilc <- data_drinking |> 
+  select(practid, period, treat, binge.days) |>
+  pivot_wider(id_cols = c(practid, treat), names_from = period, values_from = binge.days) |> 
+  mutate(change.binge = `3mo` - base)
+
+w_test <- wilcox.test(change.binge ~ treat, data = data_wilc)
+
+wilc_tbl <- data.frame()
+wilc_tbl <- wilc_tbl |> 
+  bind_rows(data_wilc |> 
+              summarize(
+                median = median(change.binge, na.rm = TRUE),
+                q25 = quantile(change.binge, 0.25, na.rm = TRUE),
+                q75 = quantile(change.binge, 0.75, na.rm = TRUE),
+                p = w_test$p.value,
+                .by = treat
+              ) |> 
+              mutate(change.binge = paste0(median, " (", q25, ", ", q75, ")"),
+                     p = format_pval(p),
+                     group = "Complete cases") |> 
+              select(group, treat, change.binge, p))
+```
+
+#### Complete cases, no outliers
+```{r}
+data_drinking <-  data_subset %>% 
+  filter(!practid %in% remove_ids_binge) %>% 
+  # forcing variables to be integers
+  mutate(binge.days = as.integer(binge.days),
+         drinking.days = as.integer(drinking.days),
+         drinking.amount = as.integer(drinking.amount))
+
+outlier_range <- data_drinking %>%
+  filter(binge.days != 0) %>%
+  summarize(Q1 = quantile(binge.days, 0.25, na.rm = TRUE),
+            Q3 = quantile(binge.days, 0.75, na.rm = TRUE),
+            IQR = IQR(binge.days, na.rm = TRUE),
+            min_val = min(binge.days, na.rm = TRUE),
+            max_val = max(binge.days, na.rm = TRUE)) %>%
+  mutate(lower_whisker = max(min_val, Q1 - 1.5 * IQR),
+         upper_whisker = min(max_val, Q3 + 1.5 * IQR)) |> 
+  pull(upper_whisker)
+
+outlier_whisker_patients <- data_drinking |> 
+  filter(binge.days > outlier_range) |> 
+  pull(practid)
+
+data_drinking <- data_drinking |> 
+  filter(!practid %in% outlier_whisker_patients)
+
+data_wilc <- data_drinking |> 
+  select(practid, period, treat, binge.days) |>
+  pivot_wider(id_cols = c(practid, treat), names_from = period, values_from = binge.days) |> 
+  mutate(change.binge = `3mo` - base)
+
+w_test <- wilcox.test(change.binge ~ treat, data = data_wilc)
+
+wilc_tbl <- wilc_tbl |> 
+  bind_rows(data_wilc |> 
+              summarize(
+                median = median(change.binge, na.rm = TRUE),
+                q25 = quantile(change.binge, 0.25, na.rm = TRUE),
+                q75 = quantile(change.binge, 0.75, na.rm = TRUE),
+                p = w_test$p.value,
+                .by = treat
+              ) |> 
+              mutate(change.binge = paste0(median, " (", q25, ", ", q75, ")"),
+                     p = format_pval(p),
+                     group = "Complete cases, no outliers") |> 
+              select(group, treat, change.binge, p))
+```
+#### Imputed, all data
+
+```{r}
+data_binge <- complete(imp_all, 1)
+
+data_wilc <- data_binge |> 
+  select(practid, period, treat, binge.days) |>
+  pivot_wider(id_cols = c(practid, treat), names_from = period, values_from = binge.days) |> 
+  mutate(change.binge = `3mo` - base)
+
+w_test <- wilcox.test(change.binge ~ treat, data = data_wilc)
+
+wilc_tbl <- wilc_tbl |> 
+  bind_rows(data_wilc |> 
+              summarize(
+                median = median(change.binge, na.rm = TRUE),
+                q25 = quantile(change.binge, 0.25, na.rm = TRUE),
+                q75 = quantile(change.binge, 0.75, na.rm = TRUE),
+                p = w_test$p.value,
+                .by = treat
+              ) |> 
+              mutate(change.binge = paste0(median, " (", q25, ", ", q75, ")"),
+                     p = format_pval(p),
+                     group = "Imputed") |> 
+              select(group, treat, change.binge, p))
+```
+
+#### Imputed, no outliers
+```{r}
+data_binge <- complete(imp_binge_whisker, 1)
+
+data_wilc <- data_binge |> 
+  select(practid, period, treat, binge.days) |>
+  pivot_wider(id_cols = c(practid, treat), names_from = period, values_from = binge.days) |> 
+  mutate(change.binge = `3mo` - base)
+
+w_test <- wilcox.test(change.binge ~ treat, data = data_wilc)
+
+wilc_tbl <- wilc_tbl |> 
+  bind_rows(data_wilc |> 
+              summarize(
+                median = median(change.binge, na.rm = TRUE),
+                q25 = quantile(change.binge, 0.25, na.rm = TRUE),
+                q75 = quantile(change.binge, 0.75, na.rm = TRUE),
+                p = w_test$p.value,
+                .by = treat
+              ) |> 
+              mutate(change.binge = paste0(median, " (", q25, ", ", q75, ")"),
+                     p = format_pval(p),
+                     group = "Imputed, no outliers") |> 
+              select(group, treat, change.binge, p))
+```
+
+#### Processing the table
+
+```{r}
+final_wilcoxon_table <- wilc_tbl |> 
+  pivot_wider(names_from = treat, values_from = c(change.binge)) |> 
+  select(group, `Usual care`, Intervention, p) 
+
+final_wilcoxon_table |> 
+  gt() |> 
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = cells_column_labels())
+
+
+final_wilcoxon_table |> 
+  write_csv(file.path(proj, "3months", "PLOS_Medicine_July2025", "tables",
+                      "wilcoxon_table.csv"))
+```
+
+## Secondary Drinking Outcomes
+
+### Effect of Distribution on the outcomes
+
+Here, we will repeat the analysis for the drinking secondary outcomes, specifically focusing on the number of drinking days and drinking amount. We test the effect of 3 different distributions capable of addressing the count nature of the data as well as handle overdispersion to varying degree: zero-inflated negative binomial (ZINBM), negative binomial (NBM), and Generalized Poisson. The analysis was performed on the 100-imputed datasets.
+
+For each distribution, we will calculate the predicted means and differences between the intervention and usual care groups at baseline and 3 months, as well as the difference-in-differences (DiD) for each outcome. We will also perform bootstrapping to estimate confidence intervals for these differences. The results are captured into a single data frame and saved for future reference.
+
+#### Drinking Days
+
+##### ZINBM
+
+```{r}
+boot_results_intervention <- list()
+boot_results_usual <- list()
+boot_results_did <- list()
+
+# Loop over each of the 10 imputed datasets
+for (i in 1:100) {
+  # Get the i-th complete dataset
+  data_i <- complete(imp_drinking_days, i) %>%
+    select(drinking.days, treat, period, practid)
+  
+  # Ensure proper factor levels
+  data_i$period <- factor(data_i$period, levels = c("base", "3mo"))
+  data_i$treat <- factor(data_i$treat, levels = c("Usual care", "Intervention"))
+  
+  # Model matrix
+  Xalt <- model.matrix(~ period * treat, data = data_i)
+  Xalt <- Xalt[, c("period3mo", "period3mo:treatIntervention")]
+  
+  # Fit model
+  model_i <- glmmTMB(drinking.days ~ Xalt + (1 | practid),
+                     family = nbinom2,
+                     zi = ~treat,
+                     data = data_i
+  )
+  
+  # Predict expected values
+  data_i$pred <- predict(model_i, newdata = data_i, type = "response")
+  
+  # Group-specific bootstraps
+  boot_data_intervention <- data_i %>% filter(treat == "Intervention")
+  boot_data_usual <- data_i %>% filter(treat == "Usual care")
+  
+  boot_interv <- boot(data = boot_data_intervention,
+                      statistic = mean_diff_time_func,
+                      R = 1000)
+  boot_usual <- boot(data = boot_data_usual,
+                     statistic = mean_diff_time_func,
+                     R = 1000)
+  
+  # DID bootstrap on full predicted dataset
+  boot_did <- boot(data = data_i, statistic = bootstrap_did, R = 1000)
+  
+  # Store bootstrap replicates
+  boot_results_intervention[[i]] <- boot_interv$t
+  boot_results_usual[[i]] <- boot_usual$t
+  boot_results_did[[i]] <- boot_did$t
+}
+
+
+
+# Combine all bootstrap samples across imputations
+all_interv <- unlist(boot_results_intervention)
+all_usual <- unlist(boot_results_usual)
+all_did <- unlist(boot_results_did)
+
+all_preds <- data.frame(all_interv = all_interv,
+                        all_usual = all_usual,
+                        all_did = all_did,
+                        model = "ZINBM")
+```
+
+##### NBM
+```{r}
+set.seed(200)
+boot_results_intervention <- list()
+boot_results_usual <- list()
+boot_results_did <- list()
+
+# Loop over each of the 10 imputed datasets
+for (i in 1:100) {
+  # Get the i-th complete dataset
+  data_i <- complete(imp_drinking_days, i) %>%
+    select(drinking.days, treat, period, practid)
+  
+  # Ensure proper factor levels
+  data_i$period <- factor(data_i$period, levels = c("base", "3mo"))
+  data_i$treat <- factor(data_i$treat, levels = c("Usual care", "Intervention"))
+  
+  # Model matrix
+  Xalt <- model.matrix(~ period * treat, data = data_i)
+  Xalt <- Xalt[, c("period3mo", "period3mo:treatIntervention")]
+  
+  # Fit model
+  model_i <- glmmTMB(drinking.days ~ Xalt + (1 | practid),
+                     family = nbinom2,
+                     data = data_i
+  )
+  
+  # Predict expected values
+  data_i$pred <- predict(model_i, newdata = data_i, type = "response")
+  
+  # Group-specific bootstraps
+  boot_data_intervention <- data_i %>% filter(treat == "Intervention")
+  boot_data_usual <- data_i %>% filter(treat == "Usual care")
+  
+  boot_interv <- boot(data = boot_data_intervention,
+                      statistic = mean_diff_time_func,
+                      R = 1000)
+  boot_usual <- boot(data = boot_data_usual,
+                     statistic = mean_diff_time_func,
+                     R = 1000)
+  
+  # DID bootstrap on full predicted dataset
+  boot_did <- boot(data = data_i, statistic = bootstrap_did, R = 1000)
+  
+  # Store bootstrap replicates
+  boot_results_intervention[[i]] <- boot_interv$t
+  boot_results_usual[[i]] <- boot_usual$t
+  boot_results_did[[i]] <- boot_did$t
+}
+
+
+
+# Combine all bootstrap samples across imputations
+all_interv <- unlist(boot_results_intervention)
+all_usual <- unlist(boot_results_usual)
+all_did <- unlist(boot_results_did)
+
+all_preds <- all_preds |> 
+  bind_rows(data.frame(all_interv = all_interv,
+                       all_usual = all_usual,
+                       all_did = all_did,
+                       model = "NBM"))
+```
+
+##### Generalized Poisson
+```{r}
+set.seed(200)
+boot_results_intervention <- list()
+boot_results_usual <- list()
+boot_results_did <- list()
+
+# Loop over each of the 10 imputed datasets
+for (i in 1:100) {
+  # Get the i-th complete dataset
+  data_i <- complete(imp_drinking_days, i) %>%
+    select(drinking.days, treat, period, practid)
+  
+  # Ensure proper factor levels
+  data_i$period <- factor(data_i$period, levels = c("base", "3mo"))
+  data_i$treat <- factor(data_i$treat, levels = c("Usual care", "Intervention"))
+  
+  # Model matrix
+  Xalt <- model.matrix(~ period * treat, data = data_i)
+  Xalt <- Xalt[, c("period3mo", "period3mo:treatIntervention")]
+  
+  # Fit model
+  model_i <- glmmTMB(drinking.days ~ Xalt + (1 | practid),
+                     family = genpois,
+                     data = data_i
+  )
+  
+  # Predict expected values
+  data_i$pred <- predict(model_i, newdata = data_i, type = "response")
+  
+  # Group-specific bootstraps
+  boot_data_intervention <- data_i %>% filter(treat == "Intervention")
+  boot_data_usual <- data_i %>% filter(treat == "Usual care")
+  
+  boot_interv <- boot(data = boot_data_intervention,
+                      statistic = mean_diff_time_func,
+                      R = 1000)
+  boot_usual <- boot(data = boot_data_usual,
+                     statistic = mean_diff_time_func,
+                     R = 1000)
+  
+  # DID bootstrap on full predicted dataset
+  boot_did <- boot(data = data_i, statistic = bootstrap_did, R = 1000)
+  
+  # Store bootstrap replicates
+  boot_results_intervention[[i]] <- boot_interv$t
+  boot_results_usual[[i]] <- boot_usual$t
+  boot_results_did[[i]] <- boot_did$t
+}
+
+
+
+# Combine all bootstrap samples across imputations
+all_interv <- unlist(boot_results_intervention)
+all_usual <- unlist(boot_results_usual)
+all_did <- unlist(boot_results_did)
+
+all_preds <- all_preds |> 
+  bind_rows(data.frame(all_interv = all_interv,
+                       all_usual = all_usual,
+                       all_did = all_did,
+                       model = "Generealized Poisson"))
+```
+
+##### Saving and analyizing the results
+
+```{r}
+drinking_days_table <- all_preds |> 
+  group_by(model) |> 
+  summarize(intervention = paste0(round(mean(all_interv), 2), " (", 
+                                    round(quantile(all_interv, 0.025), 2), "; ", 
+                                    round(quantile(all_interv, 0.975), 2), ")"),
+            usual_care = paste0(round(mean(all_usual), 2), " (", 
+                                round(quantile(all_usual, 0.025), 2), "; ", 
+                                round(quantile(all_usual, 0.975), 2), ")"),
+            did = paste0(round(mean(all_did), 2), " (", 
+                         round(quantile(all_did, 0.025), 2), "; ", 
+                         round(quantile(all_did, 0.975), 2), ")")) |> 
+  mutate(model = factor(model, levels = c("Generealized Poisson", "NBM", "ZINBM"))) |> 
+  arrange(model) 
+
+drinking_days_table |> 
+  gt()
+```
+
+###### Model Estimate Tables
+
+```{r}
+# getting one of the imputed datasets
+data_drinking_days <- complete(imp_drinking_days, 1)
+
+# model matrix
+X <- model.matrix(~period * treat, data_drinking_days)
+Xalt <- X[, c("period3mo", "period3mo:treatIntervention")]
+
+
+# ZINB Model with all imputed datasets
+model_zinb <- with(imp_drinking_days,
+                   glmmTMB(drinking.days ~  Xalt + (1|practid), 
+                           family = nbinom2,
+                           zi = ~treat))
+# NB Model
+model_nb <- with(imp_drinking_days,
+                 glmmTMB(drinking.days ~  Xalt + (1|practid), 
+                         family = nbinom2))
+
+# poisson Model
+model_gen_pois <- with(imp_drinking_days,
+                       glmmTMB(drinking.days ~  Xalt + (1|practid), 
+                               family = genpois))
+
+model_estimate_tables <- tbl_merge(tbls = list(model_nb |> 
+                                                 tbl_regression(exponentiate = T),
+                                               model_zinb |> 
+                                                 tbl_regression(exponentiate = T),
+                                               model_gen_pois |> 
+                                                 tbl_regression(exponentiate = T)),
+                                   tab_spanner = c("NBM", "ZINBM", "Gen. Poisson"))
+
+model_estimate_tables
+model_estimate_tables |> 
+  as_gt() |> 
+  gtsave(filename ="drinking_days_3_model_estimates_results.docx" ,
+         path = file.path(proj, "3months", "PLOS_Medicine_July2025", "tables"))
+```
+
+#### Drinking amount
+
+##### ZINBM
+
+```{r}
+# boot_results_intervention <- list()
+# boot_results_usual <- list()
+# boot_results_did <- list()
+# 
+# # Loop over each of the 10 imputed datasets
+# for (i in 1:100) {
+#   # Get the i-th complete dataset
+#   data_i <- complete(imp_drinking_amount, i) %>%
+#     select(drinking.amount, treat, period, practid)
+#   
+#   # Ensure proper factor levels
+#   data_i$period <- factor(data_i$period, levels = c("base", "3mo"))
+#   data_i$treat <- factor(data_i$treat, levels = c("Usual care", "Intervention"))
+#   
+#   # Model matrix
+#   Xalt <- model.matrix(~ period * treat, data = data_i)
+#   Xalt <- Xalt[, c("period3mo", "period3mo:treatIntervention")]
+#   
+#   # Fit model
+#   model_i <- glmmTMB(drinking.amount ~ Xalt + (1 | practid),
+#                      family = nbinom2,
+#                      zi = ~treat,
+#                      data = data_i
+#   )
+#   
+#   # Predict expected values
+#   data_i$pred <- predict(model_i, newdata = data_i, type = "response")
+#   
+#   # Group-specific bootstraps
+#   boot_data_intervention <- data_i %>% filter(treat == "Intervention")
+#   boot_data_usual <- data_i %>% filter(treat == "Usual care")
+#   
+#   boot_interv <- boot(data = boot_data_intervention,
+#                       statistic = mean_diff_time_func,
+#                       R = 1000)
+#   boot_usual <- boot(data = boot_data_usual,
+#                      statistic = mean_diff_time_func,
+#                      R = 1000)
+#   
+#   # DID bootstrap on full predicted dataset
+#   boot_did <- boot(data = data_i, statistic = bootstrap_did, R = 1000)
+#   
+#   # Store bootstrap replicates
+#   boot_results_intervention[[i]] <- boot_interv$t
+#   boot_results_usual[[i]] <- boot_usual$t
+#   boot_results_did[[i]] <- boot_did$t
+# }
+# 
+# 
+# 
+# # Combine all bootstrap samples across imputations
+# all_interv <- unlist(boot_results_intervention)
+# all_usual <- unlist(boot_results_usual)
+# all_did <- unlist(boot_results_did)
+# 
+# all_preds <- data.frame(all_interv = all_interv,
+#                         all_usual = all_usual,
+#                         all_did = all_did,
+#                         model = "ZINBM")
+```
+
+##### NBM
+```{r}
+# set.seed(200)
+# boot_results_intervention <- list()
+# boot_results_usual <- list()
+# boot_results_did <- list()
+# 
+# # Loop over each of the 10 imputed datasets
+# for (i in 1:100) {
+#   # Get the i-th complete dataset
+#   data_i <- complete(imp_drinking_amount, i) %>%
+#     select(drinking.amount, treat, period, practid)
+#   
+#   # Ensure proper factor levels
+#   data_i$period <- factor(data_i$period, levels = c("base", "3mo"))
+#   data_i$treat <- factor(data_i$treat, levels = c("Usual care", "Intervention"))
+#   
+#   # Model matrix
+#   Xalt <- model.matrix(~ period * treat, data = data_i)
+#   Xalt <- Xalt[, c("period3mo", "period3mo:treatIntervention")]
+#   
+#   # Fit model
+#   model_i <- glmmTMB(drinking.amount ~ Xalt + (1 | practid),
+#                      family = nbinom2,
+#                      data = data_i
+#   )
+#   
+#   # Predict expected values
+#   data_i$pred <- predict(model_i, newdata = data_i, type = "response")
+#   
+#   # Group-specific bootstraps
+#   boot_data_intervention <- data_i %>% filter(treat == "Intervention")
+#   boot_data_usual <- data_i %>% filter(treat == "Usual care")
+#   
+#   boot_interv <- boot(data = boot_data_intervention,
+#                       statistic = mean_diff_time_func,
+#                       R = 1000)
+#   boot_usual <- boot(data = boot_data_usual,
+#                      statistic = mean_diff_time_func,
+#                      R = 1000)
+#   
+#   # DID bootstrap on full predicted dataset
+#   boot_did <- boot(data = data_i, statistic = bootstrap_did, R = 1000)
+#   
+#   # Store bootstrap replicates
+#   boot_results_intervention[[i]] <- boot_interv$t
+#   boot_results_usual[[i]] <- boot_usual$t
+#   boot_results_did[[i]] <- boot_did$t
+# }
+# 
+# 
+# 
+# # Combine all bootstrap samples across imputations
+# all_interv <- unlist(boot_results_intervention)
+# all_usual <- unlist(boot_results_usual)
+# all_did <- unlist(boot_results_did)
+# 
+# all_preds <- all_preds |> 
+#   bind_rows(data.frame(all_interv = all_interv,
+#                        all_usual = all_usual,
+#                        all_did = all_did,
+#                        model = "NBM"))
+```
+
+##### Generalized Poisson
+```{r}
+# set.seed(200)
+# boot_results_intervention <- list()
+# boot_results_usual <- list()
+# boot_results_did <- list()
+# 
+# # Loop over each of the 10 imputed datasets
+# for (i in 1:100) {
+#   # Get the i-th complete dataset
+#   data_i <- complete(imp_drinking_amount, i) %>%
+#     select(drinking.amount, treat, period, practid)
+#   
+#   # Ensure proper factor levels
+#   data_i$period <- factor(data_i$period, levels = c("base", "3mo"))
+#   data_i$treat <- factor(data_i$treat, levels = c("Usual care", "Intervention"))
+#   
+#   # Model matrix
+#   Xalt <- model.matrix(~ period * treat, data = data_i)
+#   Xalt <- Xalt[, c("period3mo", "period3mo:treatIntervention")]
+#   
+#   # Fit model
+#   model_i <- glmmTMB(drinking.amount ~ Xalt + (1 | practid),
+#                      family = genpois,
+#                      data = data_i
+#   )
+#   
+#   # Predict expected values
+#   data_i$pred <- predict(model_i, newdata = data_i, type = "response")
+#   
+#   # Group-specific bootstraps
+#   boot_data_intervention <- data_i %>% filter(treat == "Intervention")
+#   boot_data_usual <- data_i %>% filter(treat == "Usual care")
+#   
+#   boot_interv <- boot(data = boot_data_intervention,
+#                       statistic = mean_diff_time_func,
+#                       R = 1000)
+#   boot_usual <- boot(data = boot_data_usual,
+#                      statistic = mean_diff_time_func,
+#                      R = 1000)
+#   
+#   # DID bootstrap on full predicted dataset
+#   boot_did <- boot(data = data_i, statistic = bootstrap_did, R = 1000)
+#   
+#   # Store bootstrap replicates
+#   boot_results_intervention[[i]] <- boot_interv$t
+#   boot_results_usual[[i]] <- boot_usual$t
+#   boot_results_did[[i]] <- boot_did$t
+# }
+# 
+# 
+# 
+# # Combine all bootstrap samples across imputations
+# all_interv <- unlist(boot_results_intervention)
+# all_usual <- unlist(boot_results_usual)
+# all_did <- unlist(boot_results_did)
+# 
+# all_preds <- all_preds |> 
+#   bind_rows(data.frame(all_interv = all_interv,
+#                        all_usual = all_usual,
+#                        all_did = all_did,
+#                        model = "Generealized Poisson"))
+```
+
+##### Saving and analyizing the results
+
+```{r}
+# write_csv(all_preds, file.path(proj, "3months", "PLOS_Medicine_July2025",
+#                                "data", "all_preds_drinking_amount_boot100.csv"))
+
+all_preds <- read_csv(file.path(proj, "3months", "PLOS_Medicine_July2025",
+                                "data", "all_preds_drinking_amount_boot100.csv"))
+drinking_amount_table <- all_preds |> 
+  group_by(model) |> 
+  summarize(intervention = paste0(round(mean(all_interv), 2), " (", 
+                                    round(quantile(all_interv, 0.025), 2), "; ", 
+                                    round(quantile(all_interv, 0.975), 2), ")"),
+            usual_care = paste0(round(mean(all_usual), 2), " (", 
+                                round(quantile(all_usual, 0.025), 2), "; ", 
+                                round(quantile(all_usual, 0.975), 2), ")"),
+            did = paste0(round(mean(all_did), 2), " (", 
+                         round(quantile(all_did, 0.025), 2), "; ", 
+                         round(quantile(all_did, 0.975), 2), ")")) |> 
+  mutate(model = factor(model, levels = c("Generealized Poisson", "NBM", "ZINBM"))) |> 
+  arrange(model) 
+
+```
+
+```{r}
+drinking_amount_table
+
+drinking_amount_table |> 
+  write_csv(file.path(proj, "3months", "PLOS_Medicine_July2025", "tables",
+                      "drinking_amount_3_model_boot_results.csv"))
+```
+
+###### Model Estimate Tables
+
+```{r}
+# getting one of the imputed datasets
+data_drinking_amount <- complete(imp_drinking_amount, 1)
+
+# model matrix
+X <- model.matrix(~period * treat, data_drinking_amount)
+Xalt <- X[, c("period3mo", "period3mo:treatIntervention")]
+
+
+# ZINB Model with all imputed datasets
+model_zinb <- with(imp_drinking_amount,
+                   glmmTMB(drinking.amount ~  Xalt + (1|practid), 
+                           family = nbinom2,
+                           zi = ~treat))
+# NB Model
+model_nb <- with(imp_drinking_amount,
+                 glmmTMB(drinking.amount ~  Xalt + (1|practid), 
+                         family = nbinom2))
+
+# poisson Model
+model_gen_pois <- with(imp_drinking_amount,
+                       glmmTMB(drinking.amount ~  Xalt + (1|practid), 
+                               family = genpois))
+
+model_estimate_tables <- tbl_merge(tbls = list(model_nb |> 
+                                                 tbl_regression(exponentiate = TRUE),
+                                               model_zinb |> 
+                                                 tbl_regression(exponentiate = TRUE),
+                                               model_gen_pois |> 
+                                                 tbl_regression(exponentiate = TRUE)),
+                                   tab_spanner = c("NBM", "ZINBM", "Gen. Poisson"))
+
+model_estimate_tables
+model_estimate_tables |> 
+  as_gt() |> 
+  gtsave(filename ="drinking_amount_3_model_estimates_results.docx" ,
+         path = file.path(proj, "3months", "PLOS_Medicine_July2025", "tables"))
+```
+
+#### Wilcoxon Tests
+
+##### Drinking Days
+
+```{r}
+data_drinking_days <- complete(imp_drinking_days, 1)
+
+data_wilc <- data_drinking_days |> 
+  select(practid, period, treat, drinking.days) |>
+  pivot_wider(id_cols = c(practid, treat), names_from = period, values_from = drinking.days) |> 
+  mutate(change.drinking = `3mo` - base)
+
+w_test <- wilcox.test(change.drinking ~ treat, data = data_wilc)
+
+wilc_tbl <- data_wilc |> 
+              summarize(
+                median = median(change.drinking, na.rm = TRUE),
+                q25 = quantile(change.drinking, 0.25, na.rm = TRUE),
+                q75 = quantile(change.drinking, 0.75, na.rm = TRUE),
+                p = w_test$p.value,
+                .by = treat
+              ) |> 
+              mutate(change.drinking = paste0(median, " (", q25, ", ", q75, ")"),
+                     p = format_pval(p),
+                     group = "Imputed") |> 
+              select(group, treat, change.drinking, p)
+
+wilc_tbl |> 
+  write_csv(file.path(proj, "3months", "PLOS_Medicine_July2025", "tables",
+                      "wilcoxon_table_drinking_days.csv"))
+```
+
+##### Drinking Amount
+
+```{r}
+data_drinking_amount <- complete(imp_drinking_amount, 1)
+
+data_wilc <- data_drinking_amount |> 
+  select(practid, period, treat, drinking.amount) |>
+  pivot_wider(id_cols = c(practid, treat), names_from = period, values_from = drinking.amount) |> 
+  mutate(change.drinking.amount = `3mo` - base)
+
+w_test <- wilcox.test(change.drinking.amount ~ treat, data = data_wilc)
+
+wilc_tbl <- data_wilc |> 
+              summarize(
+                median = median(change.drinking.amount, na.rm = TRUE),
+                q25 = quantile(change.drinking.amount, 0.25, na.rm = TRUE),
+                q75 = quantile(change.drinking.amount, 0.75, na.rm = TRUE),
+                p = w_test$p.value,
+                .by = treat
+              ) |> 
+              mutate(change.drinking.amount = paste0(median, " (", q25, ", ", q75, ")"),
+                     p = format_pval(p),
+                     group = "Imputed") |> 
+              select(group, treat, change.drinking.amount, p)
+
+wilc_tbl |> 
+  write_csv(file.path(proj, "3months", "PLOS_Medicine_July2025", "tables",
+                      "wilcoxon_table_drinking_amount.csv"))
+```
+
+
+
